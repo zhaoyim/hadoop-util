@@ -155,7 +155,6 @@ class HadoopUtil(object):
                 url += key + "=" + str(value) + "&"
         except AttributeError:
             logger.warn("didn't get any query_parametes, so ,collect all apps")
-
         try:
             json_result = urlopen(url, timeout=2000).read()
             list_result = json.loads(json_result)['apps']['app']

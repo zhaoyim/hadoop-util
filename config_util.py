@@ -3,6 +3,7 @@
 Created on  : 11/3/17
 @author: chenxf@chinaskycloud.com
 """
+import os
 try:
     import ConfigParser as configparser
 except Exception:
@@ -18,13 +19,11 @@ class ConfigUtil(object):
 
     @staticmethod
     def load_config(config_file_name):
+        if not os.path.exists(config_file_name):
+            raise IOError("no such file {0}".format(config_file_name))
         cf = configparser.ConfigParser()
-        try:
-            cf.read(config_file_name)
-        except configparser.NoSectionError as error:
-            raise IOError("read properties.conf error", error)
-        else:
-            return cf
+        cf.read(config_file_name)
+        return cf
 
     def get_options(self, option_name, key=None):
         """
@@ -36,10 +35,14 @@ class ConfigUtil(object):
                 value = self.cf.get(option_name, key)
             except configparser.NoOptionError as error:
                 raise KeyError("load url error", error)
+            except configparser.NoSectionError as error:
+                raise KeyError("load url error", error)
             return value
         else:
             try:
                 value = self.cf.items(option_name)
             except configparser.NoOptionError as error:
+                raise KeyError("load url error", error)
+            except configparser.NoSectionError as error:
                 raise KeyError("load url error", error)
             return value

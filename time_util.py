@@ -71,9 +71,3 @@ class TimeUtil(object):
         time_array = time.localtime(time_stamp)
         style_time = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
         return style_time
-
-
-if __name__ == "__main__":
-    time_num = [1509522118051, 1509522060561, 1509518440216, 1509518273846]
-    for time_one in time_num:
-        print(TimeUtil.change_to_time(time_one))
