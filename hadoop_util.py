@@ -14,10 +14,23 @@ import threading
 from config_util import ConfigUtil
 from time_util import TimeUtil
 import multiprocessing
+import logging
 try:
     from urllib2 import urlopen as urlopen
 except Exception:
     from urllib.request import urlopen as urlopen
+
+logger = logging.getLogger()
+logger.setLevel(logging.WARNING)
+file_hadler = logging.FileHandler("./log/logs")
+file_hadler.setLevel(logging.WARNING)
+stream_hadler = logging.StreamHandler()
+stream_hadler.setLevel(logging.WARNING)
+formater = logging.Formatter("%(levelname)s %(asctime)s %(filename)s[line:%(lineno)d]: %(message)s")
+file_hadler.setFormatter(formater)
+stream_hadler.setFormatter(formater)
+logger.addHandler(file_hadler)
+logger.addHandler(stream_hadler)
 
 '''
  通过hadoop API获取成功执行完成的applications, queue信息。
@@ -60,7 +73,7 @@ class HadoopUtil(object):
             except Exception as error:
                 raise error
             else:
-                print("write data to {0} success".format(file))
+                logger.info("write data to {0} success".format(file))
 
     @staticmethod
     def write_to_json(data, file):
@@ -74,7 +87,7 @@ class HadoopUtil(object):
             results = [json.loads(results)["clusterMetrics"]]
             headers = results[0].keys()
         except Exception as error:
-            raise error
+            logger.error(error)
         else:
             HadoopUtil.write_to_csv(headers, results, self.cluster_file)
             HadoopUtil.write_to_json(results, "./output/cluster.json")
@@ -93,9 +106,9 @@ class HadoopUtil(object):
             results = results['scheduler']['schedulerInfo']['queues']['queue']
             headers = results[0].keys()
         except KeyError as error:
-            raise "key error %s" % error
+            logger.error("key error {0}".format(error))
         except Exception as error:
-            raise error
+            logger.error(error)
         else:
             HadoopUtil.write_to_csv(headers, results, self.scheduler_file)
             HadoopUtil.write_to_json(results, "./output/scheduler.json")
@@ -139,19 +152,19 @@ class HadoopUtil(object):
             for key, value in query_parametes.items():
                 url += key + "=" + str(value) + "&"
         except AttributeError:
-            print("didn't get any query_parametes , so ,collect all apps")
+            logger.warn("didn't get any query_parametes , so ,collect all apps")
 
         try:
             json_result = urlopen(url, timeout=2000).read()
             list_result = json.loads(json_result)['apps']['app']
             headers = list_result[0].keys()
         except KeyError as error:
-            raise "key error %s" % error
+            logger.error("key error {0}".format(error))
         except TypeError:
-            print("dit not get any data from parameters {0}".
+            logger.warn("dit not get any data from parameters {0}".
                   format(query_parametes))
         except Exception as error:
-            raise error
+            logger.error(error)
         else:
             HadoopUtil.write_to_csv(headers, list_result, self.job_file)
             HadoopUtil.write_to_json(list_result, "./output/jobs.json")
@@ -237,7 +250,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=300,
+        default=3,
         help="the scripts run's time period, default:300s"
     )
 

@@ -1,0 +1,6 @@
+WARNING 2017-11-06 16:39:12,642 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'startedTimeBegin': 1509956387241, 'startedTimeEnd': 1509958187241}
+WARNING 2017-11-06 16:39:28,332 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'startedTimeBegin': 1509956092996, 'startedTimeEnd': 1509957892996}
+WARNING 2017-11-06 16:39:31,336 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'startedTimeBegin': 1509956092996, 'startedTimeEnd': 1509957892996}
+WARNING 2017-11-06 16:39:34,339 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'startedTimeBegin': 1509956092996, 'startedTimeEnd': 1509957892996}
+WARNING 2017-11-06 16:39:37,342 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'startedTimeBegin': 1509956092996, 'startedTimeEnd': 1509957892996}
+WARNING 2017-11-06 16:41:29,562 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'startedTimeBegin': 1509871836446, 'startedTimeEnd': 1509958236446}
