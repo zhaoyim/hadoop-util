@@ -154,8 +154,8 @@ class HadoopUtil(object):
             HadoopUtil.write_to_json(list_result, "./output/jobs.json")
 
 
-def thrad_main(query_parameters):
-    pools = []
+def thread_main(query_parameters):
+    pools = list()
     pools.append(multiprocessing.Process(
         target=hadoop_util.get_cluster_information))
     pools.append(multiprocessing.Process(
@@ -166,7 +166,7 @@ def thrad_main(query_parameters):
     for pool in pools:
         pool.start()
     t = threading.Timer(
-        FLAGS.time_period, thrad_main, args=(query_parameters,))
+        FLAGS.time_period, thread_main, args=(query_parameters,))
     t.start()
 
 
@@ -184,7 +184,7 @@ def main():
         query_parameters["startedTimeBegin"] = started_time_begin
         query_parameters["startedTimeEnd"] = started_time_end
 
-    thrad_main(query_parameters)
+    thread_main(query_parameters)
 
 
 if __name__ == '__main__':
