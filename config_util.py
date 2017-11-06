@@ -3,7 +3,10 @@
 Created on  : 11/3/17
 @author: chenxf@chinaskycloud.com
 """
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except Exception:
+    import configparser as configparser
 
 
 class ConfigUtil(object):
@@ -15,10 +18,10 @@ class ConfigUtil(object):
 
     @staticmethod
     def load_config(config_file_name):
-        cf = ConfigParser.ConfigParser()
+        cf = configparser.ConfigParser()
         try:
             cf.read(config_file_name)
-        except ConfigParser.NoSectionError as error:
+        except configparser.NoSectionError as error:
             raise IOError("read properties.conf error", error)
         else:
             return cf
@@ -31,12 +34,12 @@ class ConfigUtil(object):
         if key:
             try:
                 value = self.cf.get(option_name, key)
-            except ConfigParser.NoOptionError as error:
+            except configparser.NoOptionError as error:
                 raise KeyError("load url error", error)
             return value
         else:
             try:
                 value = self.cf.items(option_name)
-            except ConfigParser.NoOptionError as error:
+            except configparser.NoOptionError as error:
                 raise KeyError("load url error", error)
             return value

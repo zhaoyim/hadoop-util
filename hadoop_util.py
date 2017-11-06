@@ -8,13 +8,31 @@ Created on  : 17-10-30 上午10:23
 import csv
 import json
 import os
-import urllib2
 import argparse
 import threading
 
 from config_util import ConfigUtil
 from time_util import TimeUtil
 import multiprocessing
+import logging
+try:
+    from urllib2 import urlopen as urlopen
+except Exception:
+    from urllib.request import urlopen as urlopen
+
+logger = logging.getLogger()
+logger.setLevel(logging.WARNING)
+file_hadler = logging.FileHandler("./log/logs")
+file_hadler.setLevel(logging.WARNING)
+stream_hadler = logging.StreamHandler()
+stream_hadler.setLevel(logging.WARNING)
+formater = logging.Formatter(
+    "%(levelname)s %(asctime)s %(filename)s[line:%(lineno)d]: %(message)s"
+    )
+file_hadler.setFormatter(formater)
+stream_hadler.setFormatter(formater)
+logger.addHandler(file_hadler)
+logger.addHandler(stream_hadler)
 
 '''
  通过hadoop API获取成功执行完成的applications, queue信息。
@@ -57,21 +75,21 @@ class HadoopUtil(object):
             except Exception as error:
                 raise error
             else:
-                print("write data to {0} success".format(file))
+                logger.info("write data to {0} success".format(file))
 
     @staticmethod
     def write_to_json(data, file):
-        with open(file, 'wb') as f:
+        with open(file, 'w') as f:
             json.dump(data, f)
 
     def get_cluster_information(self):
         url = self.hadoop_url + "metrics"
         try:
-            results = urllib2.urlopen(url, timeout=2000).read()
+            results = urlopen(url, timeout=2000).read()
             results = [json.loads(results)["clusterMetrics"]]
             headers = results[0].keys()
-        except urllib2.URLError as error:
-            raise error
+        except Exception as error:
+            logger.error(error)
         else:
             HadoopUtil.write_to_csv(headers, results, self.cluster_file)
             HadoopUtil.write_to_json(results, "./output/cluster.json")
@@ -83,16 +101,16 @@ class HadoopUtil(object):
         """
         url = self.hadoop_url + "scheduler"
         try:
-            results = urllib2.urlopen(url, timeout=2000).read()
+            results = urlopen(url, timeout=2000).read()
 
             results = json.loads(results)
 
             results = results['scheduler']['schedulerInfo']['queues']['queue']
             headers = results[0].keys()
-        except urllib2.URLError as error:
-            raise error
         except KeyError as error:
-            raise "key error %s" % error
+            logger.error("key error {0}".format(error))
+        except Exception as error:
+            logger.error(error)
         else:
             HadoopUtil.write_to_csv(headers, results, self.scheduler_file)
             HadoopUtil.write_to_json(results, "./output/scheduler.json")
@@ -136,26 +154,26 @@ class HadoopUtil(object):
             for key, value in query_parametes.items():
                 url += key + "=" + str(value) + "&"
         except AttributeError:
-            print("didn't get any query_parametes , so ,collect all apps")
+            logger.warn("didn't get any query_parametes, so ,collect all apps")
 
         try:
-            json_result = urllib2.urlopen(url, timeout=2000).read()
+            json_result = urlopen(url, timeout=2000).read()
             list_result = json.loads(json_result)['apps']['app']
             headers = list_result[0].keys()
-        except urllib2.URLError as e:
-            raise e
         except KeyError as error:
-            raise "key error %s" % error
+            logger.error("key error {0}".format(error))
         except TypeError:
-            print("dit not get any data from parameters {0}".
-                  format(query_parametes))
+            logger.warn("dit not get any data from parameters "
+                        "{0}".format(query_parametes))
+        except Exception as error:
+            logger.error(error)
         else:
             HadoopUtil.write_to_csv(headers, list_result, self.job_file)
             HadoopUtil.write_to_json(list_result, "./output/jobs.json")
 
 
-def thrad_main(query_parameters):
-    pools = []
+def thread_main(query_parameters):
+    pools = list()
     pools.append(multiprocessing.Process(
         target=hadoop_util.get_cluster_information))
     pools.append(multiprocessing.Process(
@@ -166,7 +184,7 @@ def thrad_main(query_parameters):
     for pool in pools:
         pool.start()
     t = threading.Timer(
-        FLAGS.time_period, thrad_main, args=(query_parameters,))
+        FLAGS.time_period, thread_main, args=(query_parameters,))
     t.start()
 
 
@@ -184,7 +202,7 @@ def main():
         query_parameters["startedTimeBegin"] = started_time_begin
         query_parameters["startedTimeEnd"] = started_time_end
 
-    thrad_main(query_parameters)
+    thread_main(query_parameters)
 
 
 if __name__ == '__main__':
@@ -234,7 +252,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=300,
+        default=3,
         help="the scripts run's time period, default:300s"
     )
 
