@@ -8,13 +8,16 @@ Created on  : 17-10-30 上午10:23
 import csv
 import json
 import os
-import urllib2
 import argparse
 import threading
 
 from config_util import ConfigUtil
 from time_util import TimeUtil
 import multiprocessing
+try:
+    from urllib2 import urlopen as urlopen
+except Exception:
+    from urllib.request import urlopen as urlopen
 
 '''
  通过hadoop API获取成功执行完成的applications, queue信息。
@@ -61,16 +64,16 @@ class HadoopUtil(object):
 
     @staticmethod
     def write_to_json(data, file):
-        with open(file, 'wb') as f:
+        with open(file, 'w') as f:
             json.dump(data, f)
 
     def get_cluster_information(self):
         url = self.hadoop_url + "metrics"
         try:
-            results = urllib2.urlopen(url, timeout=2000).read()
+            results = urlopen(url, timeout=2000).read()
             results = [json.loads(results)["clusterMetrics"]]
             headers = results[0].keys()
-        except urllib2.URLError as error:
+        except Exception as error:
             raise error
         else:
             HadoopUtil.write_to_csv(headers, results, self.cluster_file)
@@ -83,16 +86,16 @@ class HadoopUtil(object):
         """
         url = self.hadoop_url + "scheduler"
         try:
-            results = urllib2.urlopen(url, timeout=2000).read()
+            results = urlopen(url, timeout=2000).read()
 
             results = json.loads(results)
 
             results = results['scheduler']['schedulerInfo']['queues']['queue']
             headers = results[0].keys()
-        except urllib2.URLError as error:
-            raise error
         except KeyError as error:
             raise "key error %s" % error
+        except Exception as error:
+            raise error
         else:
             HadoopUtil.write_to_csv(headers, results, self.scheduler_file)
             HadoopUtil.write_to_json(results, "./output/scheduler.json")
@@ -139,16 +142,16 @@ class HadoopUtil(object):
             print("didn't get any query_parametes , so ,collect all apps")
 
         try:
-            json_result = urllib2.urlopen(url, timeout=2000).read()
+            json_result = urlopen(url, timeout=2000).read()
             list_result = json.loads(json_result)['apps']['app']
             headers = list_result[0].keys()
-        except urllib2.URLError as e:
-            raise e
         except KeyError as error:
             raise "key error %s" % error
         except TypeError:
             print("dit not get any data from parameters {0}".
                   format(query_parametes))
+        except Exception as error:
+            raise error
         else:
             HadoopUtil.write_to_csv(headers, list_result, self.job_file)
             HadoopUtil.write_to_json(list_result, "./output/jobs.json")
