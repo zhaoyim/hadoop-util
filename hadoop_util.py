@@ -26,7 +26,9 @@ file_hadler = logging.FileHandler("./log/logs")
 file_hadler.setLevel(logging.WARNING)
 stream_hadler = logging.StreamHandler()
 stream_hadler.setLevel(logging.WARNING)
-formater = logging.Formatter("%(levelname)s %(asctime)s %(filename)s[line:%(lineno)d]: %(message)s")
+formater = logging.Formatter(
+    "%(levelname)s %(asctime)s %(filename)s[line:%(lineno)d]: %(message)s"
+    )
 file_hadler.setFormatter(formater)
 stream_hadler.setFormatter(formater)
 logger.addHandler(file_hadler)
@@ -152,7 +154,7 @@ class HadoopUtil(object):
             for key, value in query_parametes.items():
                 url += key + "=" + str(value) + "&"
         except AttributeError:
-            logger.warn("didn't get any query_parametes , so ,collect all apps")
+            logger.warn("didn't get any query_parametes, so ,collect all apps")
 
         try:
             json_result = urlopen(url, timeout=2000).read()
@@ -161,8 +163,8 @@ class HadoopUtil(object):
         except KeyError as error:
             logger.error("key error {0}".format(error))
         except TypeError:
-            logger.warn("dit not get any data from parameters {0}".
-                  format(query_parametes))
+            logger.warn("dit not get any data from parameters "
+                        "{0}".format(query_parametes))
         except Exception as error:
             logger.error(error)
         else:
