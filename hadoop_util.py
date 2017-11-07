@@ -50,7 +50,7 @@ class HadoopUtil(object):
     获取hadoop 的相关信息，主要包括队列信息，job信息
     """
 
-    def __init__(self, job_file, app_file, scheduler_file, cluster_file):
+    def __init__(self, sparkjob_file, commonjob_file, app_file, scheduler_file, cluster_file):
         """
         :param hadoop_url: 初始化集群url
         """
@@ -58,11 +58,13 @@ class HadoopUtil(object):
         self.confing_util = ConfigUtil(CONFIG_FILE)
         self.hadoop_url = self.confing_util.get_options("url", "hadoop_url")
         self.app_file = app_file
-        self.job_file = job_file
+        self.sparkjob_file = sparkjob_file
+        self.commonjob_file = commonjob_file
         self.scheduler_file = scheduler_file
         self.cluster_file = cluster_file
         self.application_url = self.confing_util.get_options("url", "application_url")
         self.job_metrics = self.confing_util.get_options("job", "job_metrices")
+        self.job_url = self.confing_util.get_options("url", "job_url")
 
     @staticmethod
     def write_to_csv(headers, data, file):
@@ -125,8 +127,6 @@ class HadoopUtil(object):
         try:
             result = urlopen(url, timeout=2000).read()
         except urlerror as error:
-            logger.error(error)
-            import urllib2
             raise urlerror("urlopen {0} error:{1}".format(url, error.reason))
         else:
             return result
@@ -187,9 +187,9 @@ class HadoopUtil(object):
         else:
             HadoopUtil.write_to_csv(headers, list_result, self.app_file)
             HadoopUtil.write_to_json(list_result, "./output/apps.json")
-            self.get_jobs_information(list_result)
+            self.get_sparkjobs_information(list_result)
 
-    def get_jobs_information(self, applications):
+    def get_sparkjobs_information(self, applications):
         """
         get each application's jobs information
         :param applications: list contains applications information
@@ -202,9 +202,9 @@ class HadoopUtil(object):
             try:
                 application_jobs_list = HadoopUtil.request_url(application_rest_url)
                 application_jobs_list = json.loads(application_jobs_list)
-            except urlerror as error:
-                logger.warn("happen error,continue")
-                logger.error(error)
+            except urlerror:
+                logger.warn("this application {0} is not "
+                            "a spark type application".format(application_items["id"]))
             else:
                 for applications in application_jobs_list:
                     apps = {key: value for key, value in applications.items()
@@ -212,8 +212,17 @@ class HadoopUtil(object):
                             if key in self.job_metrics}
                     app_jobs.append(dict(apps, **application_items))
         headers = app_jobs[0].keys()
-        HadoopUtil.write_to_json(app_jobs, "./output/job.json")
-        HadoopUtil.write_to_csv(headers, app_jobs, self.job_file)
+        HadoopUtil.write_to_json(app_jobs, "./output/sparkjob.json")
+        HadoopUtil.write_to_csv(headers, app_jobs, self.sparkjob_file)
+
+    def get_commonjobs_information(self):
+        jobs_url = self.job_url
+        result = HadoopUtil.request_url(jobs_url)
+        result = json.loads(result)["jobs"]["job"]
+        headers = result[0].keys()
+        HadoopUtil.write_to_csv(headers, result, self.commonjob_file)
+        HadoopUtil.write_to_json(result, "./output/commonjob.json")
+        print(type(result))
 
 
 def thread_main(query_parameters):
@@ -224,7 +233,9 @@ def thread_main(query_parameters):
         target=hadoop_util.get_cluster_scheduler))
     pools.append(multiprocessing.Process(
         target=hadoop_util.get_applications_information, args=(query_parameters,)))
-
+    pools.append(multiprocessing.Process(
+        target=hadoop_util.get_commonjobs_information)
+    )
     for pool in pools:
         pool.start()
     t = threading.Timer(
@@ -253,10 +264,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.register("type", "bool", lambda v: v.lower() == "true")
     parser.add_argument(
-        "--job_file",
+        "--sparkjob_file",
         type=str,
-        default="./output/job.csv",
-        help="the output file of the job's information."
+        default="./output/sparkjob.csv",
+        help="the output file of the spark job's information."
+    )
+    parser.add_argument(
+        "--commonjob_file",
+        type=str,
+        default="./output/commonjob.csv",
+        help="the output file of the common job's information."
     )
     parser.add_argument(
         "--app_file",
@@ -309,7 +326,8 @@ if __name__ == '__main__':
     FLAGS = parser.parse_args()
 
     hadoop_util = HadoopUtil(
-        FLAGS.job_file,
+        FLAGS.sparkjob_file,
+        FLAGS.commonjob_file,
         FLAGS.app_file,
         FLAGS.scheduler_file,
         FLAGS.cluster_file)
