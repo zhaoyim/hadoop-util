@@ -17,8 +17,10 @@ import multiprocessing
 import logging
 try:
     from urllib2 import urlopen as urlopen
+    from urllib2 import URLError as urlerror
 except Exception:
     from urllib.request import urlopen as urlopen
+    from urllib.erros import URLError as urlerror
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
@@ -48,16 +50,19 @@ class HadoopUtil(object):
     获取hadoop 的相关信息，主要包括队列信息，job信息
     """
 
-    def __init__(self, job_file, scheduler_file, cluster_file):
+    def __init__(self, job_file, app_file, scheduler_file, cluster_file):
         """
         :param hadoop_url: 初始化集群url
         """
 
         self.confing_util = ConfigUtil(CONFIG_FILE)
         self.hadoop_url = self.confing_util.get_options("url", "hadoop_url")
+        self.app_file = app_file
         self.job_file = job_file
         self.scheduler_file = scheduler_file
         self.cluster_file = cluster_file
+        self.application_url = self.confing_util.get_options("url", "application_url")
+        self.job_metrics = self.confing_util.get_options("job", "job_metrices")
 
     @staticmethod
     def write_to_csv(headers, data, file):
@@ -115,7 +120,18 @@ class HadoopUtil(object):
             HadoopUtil.write_to_csv(headers, results, self.scheduler_file)
             HadoopUtil.write_to_json(results, "./output/scheduler.json")
 
-    def get_job(self, query_parametes=None):
+    @staticmethod
+    def request_url(url):
+        try:
+            result = urlopen(url, timeout=2000).read()
+        except urlerror as error:
+            logger.error(error)
+            import urllib2
+            raise urlerror("urlopen {0} error:{1}".format(url, error.reason))
+        else:
+            return result
+
+    def get_applications_information(self, query_parametes=None):
         """
         :param query_parametes: dict 过滤条件，默认为成功执行完成 默认搜索所有
           * state [deprecated] - state of the application
@@ -149,14 +165,16 @@ class HadoopUtil(object):
            query_parametes = {"finalStaus": "SUCCEEDED"}
            get_job(query_parametes=query_parametes)
         """
-        url = self.hadoop_url + "apps?"
+        hadoop_rest_url = self.hadoop_url + "apps?"
+
         try:
             for key, value in query_parametes.items():
-                url += key + "=" + str(value) + "&"
+                hadoop_rest_url += key + "=" + str(value) + "&"
         except AttributeError:
             logger.warn("didn't get any query_parametes, so ,collect all apps")
+
+        json_result = HadoopUtil.request_url(hadoop_rest_url)
         try:
-            json_result = urlopen(url, timeout=2000).read()
             list_result = json.loads(json_result)['apps']['app']
             headers = list_result[0].keys()
         except KeyError as error:
@@ -167,8 +185,35 @@ class HadoopUtil(object):
         except Exception as error:
             logger.error(error)
         else:
-            HadoopUtil.write_to_csv(headers, list_result, self.job_file)
-            HadoopUtil.write_to_json(list_result, "./output/jobs.json")
+            HadoopUtil.write_to_csv(headers, list_result, self.app_file)
+            HadoopUtil.write_to_json(list_result, "./output/apps.json")
+            self.get_jobs_information(list_result)
+
+    def get_jobs_information(self, applications):
+        """
+        get each application's jobs information
+        :param applications: list contains applications information
+        """
+        app_jobs = []
+        self.job_metrics = self.job_metrics.replace("\n", "").split(',')
+        for application_items in applications:
+            application_id = application_items["id"]
+            application_rest_url = self.application_url + application_id + "/1/jobs"
+            try:
+                application_jobs_list = HadoopUtil.request_url(application_rest_url)
+                application_jobs_list = json.loads(application_jobs_list)
+            except urlerror as error:
+                logger.warn("happen error,continue")
+                logger.error(error)
+            else:
+                for applications in application_jobs_list:
+                    apps = {key: value for key, value in applications.items()
+                            for applications in application_jobs_list
+                            if key in self.job_metrics}
+                    app_jobs.append(dict(apps, **application_items))
+        headers = app_jobs[0].keys()
+        HadoopUtil.write_to_json(app_jobs, "./output/job.json")
+        HadoopUtil.write_to_csv(headers, app_jobs, self.job_file)
 
 
 def thread_main(query_parameters):
@@ -178,7 +223,7 @@ def thread_main(query_parameters):
     pools.append(multiprocessing.Process(
         target=hadoop_util.get_cluster_scheduler))
     pools.append(multiprocessing.Process(
-        target=hadoop_util.get_job, args=(query_parameters,)))
+        target=hadoop_util.get_applications_information, args=(query_parameters,)))
 
     for pool in pools:
         pool.start()
@@ -197,9 +242,9 @@ def main():
         's': lambda: TimeUtil.get_time_seconds(FLAGS.time_interval),
     }
     if FLAGS.time_interval > 0:
-        started_time_begin, started_time_end = sw[FLAGS.time_format]()
-        query_parameters["startedTimeBegin"] = started_time_begin
-        query_parameters["startedTimeEnd"] = started_time_end
+        finished_time_begin, finished_time_end = sw[FLAGS.time_format]()
+        query_parameters["finishedTimeBegin"] = finished_time_begin
+        query_parameters["finishedTimeEnd"] = finished_time_end
 
     thread_main(query_parameters)
 
@@ -211,6 +256,12 @@ if __name__ == '__main__':
         "--job_file",
         type=str,
         default="./output/job.csv",
+        help="the output file of the job's information."
+    )
+    parser.add_argument(
+        "--app_file",
+        type=str,
+        default="./output/app.csv",
         help="the output file of the job's information."
     )
     parser.add_argument(
@@ -229,16 +280,16 @@ if __name__ == '__main__':
         "--time_format",
         type=str,
         choices=['w', 'd', 'h', 'm', 's'],
-        default='m',
+        default='d',
         help="w: week, d:day, h:hour, m:minutes, s:second"
     )
     parser.add_argument(
         "--time_interval",
         type=int,
-        default=30,
-        help="to collector job's information which job's start time begin "
+        default=10,
+        help="to collector job's information which job's finished time begin "
              "before now.time_format:m , time_interval:20 means collectors "
-             "job's information which started in lasted 5 minutes, "
+             "job's information which finished in lasted 5 minutes, "
              "if time_interval<0 then collecotrs all"
     )
     parser.add_argument(
@@ -251,7 +302,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=3,
+        default=300,
         help="the scripts run's time period, default:300s"
     )
 
@@ -259,6 +310,7 @@ if __name__ == '__main__':
 
     hadoop_util = HadoopUtil(
         FLAGS.job_file,
+        FLAGS.app_file,
         FLAGS.scheduler_file,
         FLAGS.cluster_file)
     main()
