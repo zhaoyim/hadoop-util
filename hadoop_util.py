@@ -5,7 +5,6 @@ Created on  : 17-10-30 上午10:23
 @author: chenxf@chinaskycloud.com
 """
 
-import csv
 import json
 import os
 import argparse
@@ -14,27 +13,15 @@ import threading
 from config_util import ConfigUtil
 from time_util import TimeUtil
 import multiprocessing
-import logging
 try:
     from urllib2 import urlopen as urlopen
     from urllib2 import URLError as urlerror
 except Exception:
     from urllib.request import urlopen as urlopen
-    from urllib.erros import URLError as urlerror
+    from urllib.error import URLError as urlerror
+from logger_util import get_logger
+from file_operator import FileOperator
 
-logger = logging.getLogger()
-logger.setLevel(logging.WARNING)
-file_hadler = logging.FileHandler("./log/logs")
-file_hadler.setLevel(logging.WARNING)
-stream_hadler = logging.StreamHandler()
-stream_hadler.setLevel(logging.WARNING)
-formater = logging.Formatter(
-    "%(levelname)s %(asctime)s %(filename)s[line:%(lineno)d]: %(message)s"
-    )
-file_hadler.setFormatter(formater)
-stream_hadler.setFormatter(formater)
-logger.addHandler(file_hadler)
-logger.addHandler(stream_hadler)
 
 '''
  通过hadoop API获取成功执行完成的applications, queue信息。
@@ -43,6 +30,7 @@ logger.addHandler(stream_hadler)
 PWD = os.getcwd()
 CONFIG_FILE = PWD + "/conf/properties.conf"
 FLAGS = None
+logger = get_logger(refresh=True)
 
 
 class HadoopUtil(object):
@@ -66,31 +54,11 @@ class HadoopUtil(object):
         self.job_metrics = self.confing_util.get_options("job", "job_metrices")
         self.job_url = self.confing_util.get_options("url", "job_url")
 
-    @staticmethod
-    def write_to_csv(headers, data, file):
-        """
-        write data to csv
-        :param headers: the csv headers
-        :param data: type list
-        :return:
-        """
-        with open(file, 'w') as f:
-            try:
-                f_csv = csv.DictWriter(f, headers)
-                f_csv.writeheader()
-                f_csv.writerows(data)
-            except Exception as error:
-                raise error
-            else:
-                logger.info("write data to {0} success".format(file))
-
-    @staticmethod
-    def write_to_json(data, file):
-        with open(file, 'w') as f:
-            json.dump(data, f)
-
     def get_cluster_information(self):
         url = self.hadoop_url + "metrics"
+        header = True
+        if FileOperator.file_exits(self.cluster_file):
+            header = False
         try:
             results = urlopen(url, timeout=2000).read()
             results = [json.loads(results)["clusterMetrics"]]
@@ -98,8 +66,8 @@ class HadoopUtil(object):
         except Exception as error:
             logger.error(error)
         else:
-            HadoopUtil.write_to_csv(headers, results, self.cluster_file)
-            HadoopUtil.write_to_json(results, "./output/cluster.json")
+            FileOperator.write_to_csv(headers, results, self.cluster_file, header=header, model="ab+")
+            FileOperator.write_to_json(results, "./output/cluster.json", model="ab+")
 
     def get_cluster_scheduler(self):
         """
@@ -107,6 +75,9 @@ class HadoopUtil(object):
         :param file: 输出文件保存路径
         """
         url = self.hadoop_url + "scheduler"
+        header = True
+        if FileOperator.file_exits(self.scheduler_file):
+            header = False
         try:
             results = urlopen(url, timeout=2000).read()
 
@@ -119,8 +90,8 @@ class HadoopUtil(object):
         except Exception as error:
             logger.error(error)
         else:
-            HadoopUtil.write_to_csv(headers, results, self.scheduler_file)
-            HadoopUtil.write_to_json(results, "./output/scheduler.json")
+            FileOperator.write_to_csv(headers, results, self.scheduler_file, header=header, model="ab+")
+            FileOperator.write_to_json(results, "./output/scheduler.json", model="ab+")
 
     @staticmethod
     def request_url(url):
@@ -185,8 +156,8 @@ class HadoopUtil(object):
         except Exception as error:
             logger.error(error)
         else:
-            HadoopUtil.write_to_csv(headers, list_result, self.app_file)
-            HadoopUtil.write_to_json(list_result, "./output/apps.json")
+            FileOperator.write_to_csv(headers, list_result, self.app_file)
+            FileOperator.write_to_json(list_result, "./output/apps.json")
             self.get_sparkjobs_information(list_result)
 
     def get_sparkjobs_information(self, applications):
@@ -203,7 +174,7 @@ class HadoopUtil(object):
                 application_jobs_list = HadoopUtil.request_url(application_rest_url)
                 application_jobs_list = json.loads(application_jobs_list)
             except urlerror:
-                logger.warn("this application {0} is not "
+                logger.warning("this application {0} is not "
                             "a spark type application".format(application_items["id"]))
             else:
                 for applications in application_jobs_list:
@@ -212,16 +183,16 @@ class HadoopUtil(object):
                             if key in self.job_metrics}
                     app_jobs.append(dict(apps, **application_items))
         headers = app_jobs[0].keys()
-        HadoopUtil.write_to_json(app_jobs, "./output/sparkjob.json")
-        HadoopUtil.write_to_csv(headers, app_jobs, self.sparkjob_file)
+        FileOperator.write_to_json(app_jobs, "./output/sparkjob.json")
+        FileOperator.write_to_csv(headers, app_jobs, self.sparkjob_file)
 
     def get_commonjobs_information(self):
         jobs_url = self.job_url
         result = HadoopUtil.request_url(jobs_url)
         result = json.loads(result)["jobs"]["job"]
         headers = result[0].keys()
-        HadoopUtil.write_to_csv(headers, result, self.commonjob_file)
-        HadoopUtil.write_to_json(result, "./output/commonjob.json")
+        FileOperator.write_to_csv(headers, result, self.commonjob_file)
+        FileOperator.write_to_json(result, "./output/commonjob.json")
         print(type(result))
 
 
@@ -303,11 +274,11 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_interval",
         type=int,
-        default=10,
+        default=-1,
         help="to collector job's information which job's finished time begin "
              "before now.time_format:m , time_interval:20 means collectors "
              "job's information which finished in lasted 5 minutes, "
-             "if time_interval<0 then collecotrs all"
+             "if time_interval < 0 then collecotrs all"
     )
     parser.add_argument(
         "--state",
@@ -319,7 +290,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=300,
+        default=5,
         help="the scripts run's time period, default:300s"
     )
 

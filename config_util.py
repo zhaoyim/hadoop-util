@@ -32,7 +32,7 @@ class ConfigUtil(object):
         """
         if key:
             try:
-                value = self.cf.get(option_name, key)
+                value = self.cf.get(option_name, key).replace(" ", "").replace("\n", "")
             except configparser.NoOptionError as error:
                 raise KeyError("load url error", error)
             except configparser.NoSectionError as error:
