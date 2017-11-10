@@ -6,9 +6,6 @@ Created on  : 11/10/17
 import json
 import os
 import csv
-from logger_util import get_logger
-
-logger = get_logger()
 
 
 class FileOperator(object):
@@ -21,6 +18,9 @@ class FileOperator(object):
         :param data: type list
         :return:
         """
+        from logger_util import get_logger
+
+        logger = get_logger()
         with open(file, model) as f:
             try:
                 f_csv = csv.DictWriter(f, headers)
@@ -42,3 +42,8 @@ class FileOperator(object):
         if os.path.isfile(file):
             return True
         return False
+
+    @staticmethod
+    def makesure_file_exits(file):
+        if not os.path.exists(file):
+            os.mkdir(file)
