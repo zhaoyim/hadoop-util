@@ -62,10 +62,9 @@ class HadoopUtil(object):
         try:
             results = urlopen(url, timeout=2000).read()
             results = [json.loads(results)["clusterMetrics"]]
-            headers = results[0].keys()
         except Exception as error:
             logger.error(error)
-
+        headers = results[0].keys()
         FileOperator.write_to_csv(headers, results, self.cluster_file, header=header, model="a+")
         FileOperator.write_to_json(results, "./output/cluster.json", model="a+")
 
@@ -84,11 +83,18 @@ class HadoopUtil(object):
             results = json.loads(results)
 
             results = results['scheduler']['schedulerInfo']['queues']['queue']
-            headers = results[0].keys()
+
+            resource_key = results[0]['resourcesUsed'].keys()
+
+            results_copy = results[0].copy()
+
+            for key, value in results_copy['resourcesUsed'].items():
+                results[0][key] = value
         except KeyError as error:
             logger.error("key error {0}".format(error))
         except Exception as error:
             logger.error(error)
+        headers = results[0].keys()
         FileOperator.write_to_csv(headers, results, self.scheduler_file, header=header, model="a+")
         FileOperator.write_to_json(results, "./output/scheduler.json", model="a+")
 
