@@ -65,9 +65,9 @@ class HadoopUtil(object):
             headers = results[0].keys()
         except Exception as error:
             logger.error(error)
-        else:
-            FileOperator.write_to_csv(headers, results, self.cluster_file, header=header, model="ab+")
-            FileOperator.write_to_json(results, "./output/cluster.json", model="ab+")
+
+        FileOperator.write_to_csv(headers, results, self.cluster_file, header=header, model="ab+")
+        FileOperator.write_to_json(results, "./output/cluster.json", model="ab+")
 
     def get_cluster_scheduler(self):
         """
@@ -89,9 +89,8 @@ class HadoopUtil(object):
             logger.error("key error {0}".format(error))
         except Exception as error:
             logger.error(error)
-        else:
-            FileOperator.write_to_csv(headers, results, self.scheduler_file, header=header, model="ab+")
-            FileOperator.write_to_json(results, "./output/scheduler.json", model="ab+")
+        FileOperator.write_to_csv(headers, results, self.scheduler_file, header=header, model="ab+")
+        FileOperator.write_to_json(results, "./output/scheduler.json", model="ab+")
 
     @staticmethod
     def request_url(url):
@@ -290,7 +289,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=5,
+        default=30,
         help="the scripts run's time period, default:300s"
     )
 
