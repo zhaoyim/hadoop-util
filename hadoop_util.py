@@ -66,7 +66,8 @@ class HadoopUtil(object):
             logger.error(error)
         headers = results[0].keys()
         FileOperator.write_to_csv(headers, results, self.cluster_file, header=header, model="a+")
-        FileOperator.write_to_json(results, "./output/cluster.json", model="a+")
+        FileOperator.write_to_csv(headers, results, "./output/cluster2.csv", model="w")
+        #FileOperator.write_to_json(results, "./output/cluster.json", model="a+")
 
     def get_cluster_scheduler(self):
         """
@@ -74,17 +75,13 @@ class HadoopUtil(object):
         :param file: 输出文件保存路径
         """
         url = self.hadoop_url + "scheduler"
-        header = True
-        if FileOperator.file_exits(self.scheduler_file):
-            header = False
+
         try:
             results = urlopen(url, timeout=2000).read()
 
             results = json.loads(results)
 
             results = results['scheduler']['schedulerInfo']['queues']['queue']
-
-            resource_key = results[0]['resourcesUsed'].keys()
 
             results_copy = results[0].copy()
 
@@ -94,9 +91,13 @@ class HadoopUtil(object):
             logger.error("key error {0}".format(error))
         except Exception as error:
             logger.error(error)
-        headers = results[0].keys()
-        FileOperator.write_to_csv(headers, results, self.scheduler_file, header=header, model="a+")
-        FileOperator.write_to_json(results, "./output/scheduler.json", model="a+")
+        if FileOperator.file_exits(self.scheduler_file):
+            headers = None
+        else:
+            headers = results[0].keys()
+        FileOperator.write_to_csv(results, self.scheduler_file, headers=headers, model="a+")
+        FileOperator.write_to_csv(headers, results, "./output/scheduler2.csv", model="w+")
+        #FileOperator.write_to_json(results, "./output/scheduler.json", model="a+")
 
     @staticmethod
     def request_url(url):
@@ -161,8 +162,8 @@ class HadoopUtil(object):
         except Exception as error:
             logger.error(error)
         else:
-            FileOperator.write_to_csv(headers, list_result, self.app_file)
-            FileOperator.write_to_json(list_result, "./output/apps.json")
+            FileOperator.write_to_csv(list_result, self.app_file, headers=headers)
+            #FileOperator.write_to_json(list_result, "./output/apps.json")
             self.get_sparkjobs_information(list_result)
 
     def get_sparkjobs_information(self, applications):
@@ -189,14 +190,14 @@ class HadoopUtil(object):
                     app_jobs.append(dict(apps, **application_items))
         headers = app_jobs[0].keys()
         FileOperator.write_to_json(app_jobs, "./output/sparkjob.json")
-        FileOperator.write_to_csv(headers, app_jobs, self.sparkjob_file)
+        #FileOperator.write_to_csv(app_jobs, self.sparkjob_file, headers=headers)
 
     def get_commonjobs_information(self):
         jobs_url = self.job_url
         result = HadoopUtil.request_url(jobs_url)
         result = json.loads(result)["jobs"]["job"]
         headers = result[0].keys()
-        FileOperator.write_to_csv(headers, result, self.commonjob_file)
+        FileOperator.write_to_csv(result, self.commonjob_file, headers=headers)
         FileOperator.write_to_json(result, "./output/commonjob.json")
         print(type(result))
 
@@ -273,16 +274,16 @@ if __name__ == '__main__':
         "--time_format",
         type=str,
         choices=['w', 'd', 'h', 'm', 's'],
-        default='d',
+        default='m',
         help="w: week, d:day, h:hour, m:minutes, s:second"
     )
     parser.add_argument(
         "--time_interval",
         type=int,
-        default=-1,
+        default=10,
         help="to collector job's information which job's finished time begin "
              "before now.time_format:m , time_interval:20 means collectors "
-             "job's information which finished in lasted 5 minutes, "
+             "job's information which finished in lasted 20 minutes, "
              "if time_interval < 0 then collecotrs all"
     )
     parser.add_argument(
@@ -295,8 +296,8 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=30,
-        help="the scripts run's time period, default:300s"
+        default=600,
+        help="the scripts run's time period"
     )
 
     FLAGS = parser.parse_args()
