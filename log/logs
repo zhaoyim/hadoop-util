@@ -451,3 +451,10 @@ WARNING 2017-11-16 13:33:12,778 hadoop_util.py[line:183]: this application appli
 WARNING 2017-11-16 13:43:12,784 hadoop_util.py[line:183]: this application application_1509436254805_0370 is not a spark type application
 WARNING 2017-11-16 13:47:43,502 hadoop_util.py[line:160]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510811151126, 'finishedTimeEnd': 1510811751126}
 WARNING 2017-11-16 13:48:54,160 hadoop_util.py[line:182]: this application application_1509436254805_0416 is not a spark type application
+WARNING 2017-11-16 13:50:28,241 hadoop_util.py[line:161]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510811055544, 'finishedTimeEnd': 1510811655544}
+WARNING 2017-11-16 13:51:14,779 hadoop_util.py[line:161]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510811641121, 'finishedTimeEnd': 1510812241121}
+WARNING 2017-11-16 13:52:17,793 hadoop_util.py[line:161]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510811715522, 'finishedTimeEnd': 1510812315522}
+WARNING 2017-11-16 13:56:16,922 hadoop_util.py[line:161]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510812084763, 'finishedTimeEnd': 1510812684763}
+WARNING 2017-11-16 13:56:58,715 hadoop_util.py[line:162]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510811918651, 'finishedTimeEnd': 1510812518651}
+WARNING 2017-11-16 13:57:35,306 hadoop_util.py[line:186]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 13:58:37,249 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application

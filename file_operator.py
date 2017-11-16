@@ -11,7 +11,7 @@ import csv
 class FileOperator(object):
 
     @staticmethod
-    def write_to_csv(data, file, headers=None, model="w"):
+    def write_to_csv(data, file,  headers, write_header=True, model="w"):
         """
         write data to csv
         :param headers: the csv headers
@@ -23,11 +23,9 @@ class FileOperator(object):
         logger = get_logger()
         with open(file, model) as f:
             try:
-                if headers:
-                    f_csv = csv.DictWriter(f, headers)
+                f_csv = csv.DictWriter(f, headers)
+                if write_header:
                     f_csv.writeheader()
-                else:
-                    f_csv = csv.DictReader(f)
                 f_csv.writerows(data)
             except Exception as error:
                 raise error

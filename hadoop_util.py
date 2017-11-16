@@ -56,17 +56,19 @@ class HadoopUtil(object):
 
     def get_cluster_information(self):
         url = self.hadoop_url + "metrics"
-        header = True
+        write_header = True
         if FileOperator.file_exits(self.cluster_file):
-            header = False
+            write_header = False
         try:
             results = urlopen(url, timeout=2000).read()
             results = [json.loads(results)["clusterMetrics"]]
         except Exception as error:
             logger.error(error)
         headers = results[0].keys()
-        FileOperator.write_to_csv(headers, results, self.cluster_file, header=header, model="a+")
-        FileOperator.write_to_csv(headers, results, "./output/cluster2.csv", model="w")
+        FileOperator.write_to_csv(results, self.cluster_file,
+                                  headers=headers, write_header=write_header,model="a+")
+        FileOperator.write_to_csv(results, "./output/cluster2.csv",
+                                  headers=headers, model="w")
         #FileOperator.write_to_json(results, "./output/cluster.json", model="a+")
 
     def get_cluster_scheduler(self):
@@ -91,12 +93,14 @@ class HadoopUtil(object):
             logger.error("key error {0}".format(error))
         except Exception as error:
             logger.error(error)
+        write_header = True
         if FileOperator.file_exits(self.scheduler_file):
-            headers = None
-        else:
-            headers = results[0].keys()
-        FileOperator.write_to_csv(results, self.scheduler_file, headers=headers, model="a+")
-        FileOperator.write_to_csv(headers, results, "./output/scheduler2.csv", model="w+")
+            write_header = False
+        headers = results[0].keys()
+        FileOperator.write_to_csv(results, self.scheduler_file,
+                                  headers=headers, write_header=write_header, model="a+")
+        FileOperator.write_to_csv(results, "./output/scheduler2.csv",
+                                  headers=headers, write_header=write_header,model="w+")
         #FileOperator.write_to_json(results, "./output/scheduler.json", model="a+")
 
     @staticmethod
