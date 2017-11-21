@@ -21,7 +21,6 @@ import csv
 from os import path
 
 import multiprocessing
-import numpy
 import threading
 import tensorflow as tf
 
@@ -29,6 +28,7 @@ from tensorflow.contrib.timeseries.python.timeseries import estimators as ts_est
 from tensorflow.contrib.timeseries.python.timeseries import model as ts_model
 import matplotlib
 import argparse
+import sys
 
 matplotlib.use("agg")
 import matplotlib.pyplot as plt
@@ -36,30 +36,6 @@ import matplotlib.pyplot as plt
 from config_util import ConfigUtil
 import numpy as np
 from file_operator import FileOperator
-
-SCHEDULER_INFILE = path.join("./output/scheduler.csv")
-
-CLUSTER_INFILE = path.join("./output/cluster2.csv")
-
-# from CLUSTER_INFILE get hive information's file
-HIVE_INFILE = path.join("./output/hive.csv")
-
-# from CLUSTER_INFILE get spark information's file
-SPARK_INFILE = path.join("./output/spark.csv")
-
-# the predictions file of queue hive
-HIVE_PREFILE = path.join("./output/hive_pre.csv")
-
-# the predictions file of spark hive
-SPARK_PREFILE = path.join("./output/spark_pre.csv")
-
-# the dir of hive model' saved
-HIVE_MODEDIR = path.join("./model/hive/")
-
-# the dir of spark model' saved
-SPARK_MODEDIR = path.join("./model/spark/")
-
-FLAGS = None
 
 
 class _LSTMModel(ts_model.SequentialTimeSeriesModel):
@@ -193,10 +169,11 @@ def read_scv():
 
     sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
     spark = []
-    hive = []
-    queue1_name = "spark"
-    queue2_name = "hive"
+    # hive = []
+    # queue1_name = "spark"
+    # queue2_name = "hive"
     total_mem = 0
+    total_cpu = 0
     with open(CLUSTER_INFILE) as cluster:
         reader = csv.DictReader(cluster)
         for row in reader:
@@ -204,16 +181,16 @@ def read_scv():
             total_cpu = float(row.get("totalVirtualCores"))
     if not total_mem:
         raise ZeroDivisionError
-    print("totalMB", total_mem)
-    total_mem = 11776
+    # print("totalMB", total_mem)
+    # total_mem = 11776
     with open(SCHEDULER_INFILE) as csv_file:
         reader = csv.DictReader(csv_file)
         spark_line_num = 0
-        hive_line_num = 0
+        # hive_line_num = 0
         for row in reader:
             spark_tmp = []
-            hive_tmp = []
-            if row.get("queueName") == queue1_name:
+            # hive_tmp = []
+            if row.get("queueName") == FLAGS.queue_name:
                 for metrices in sch_metrices:
                     values = row.get(metrices, 0)
                     if not values:
@@ -226,22 +203,22 @@ def read_scv():
                 spark_tmp.insert(0, spark_line_num)
                 spark_line_num += 1
                 spark.append(spark_tmp)
-            elif row.get("queueName") == queue2_name:
-                for metrices in sch_metrices:
-                    values = row.get(metrices, 0)
-                    if not values:
-                        break
-                    if metrices == "memory":
-                        values = float(values) / total_mem
-                    elif metrices == "vCores":
-                        values = float(values) / total_cpu
-                    hive_tmp.append(values)
-                hive_tmp.insert(0, hive_line_num)
-                hive_line_num += 1
-                hive.append(hive_tmp)
+            # elif row.get("queueName") == queue2_name:
+            #     for metrices in sch_metrices:
+            #         values = row.get(metrices, 0)
+            #         if not values:
+            #             break
+            #         if metrices == "memory":
+            #             values = float(values) / total_mem
+            #         elif metrices == "vCores":
+            #             values = float(values) / total_cpu
+            #         hive_tmp.append(values)
+            #     hive_tmp.insert(0, hive_line_num)
+            #     hive_line_num += 1
+            #     hive.append(hive_tmp)
 
-    FileOperator.write_list_tocsv(spark, SPARK_INFILE)
-    FileOperator.write_list_tocsv(hive, HIVE_INFILE)
+    FileOperator.write_list_tocsv(spark, FLAGS.out_file)
+    # FileOperator.write_list_tocsv(hive, HIVE_INFILE)
 
 
 def train(csv_file_name, pre_file_name, model_dir):
@@ -292,19 +269,74 @@ def train(csv_file_name, pre_file_name, model_dir):
 
 
 def main(_):
-    time_period = 600
+
     pools = list()
     pools.append(multiprocessing.Process(
-        target=train, args=(HIVE_INFILE, HIVE_PREFILE, HIVE_MODEDIR)))
-    pools.append(multiprocessing.Process(
-        target=train, args=(SPARK_INFILE, SPARK_PREFILE, SPARK_MODEDIR)))
-
+        target=train, args=(FLAGS.input_file, FLAGS.out_file, FLAGS.model_dir)))
     for pool in pools:
         pool.start()
-    t = threading.Timer(time_period, main)
+    t = threading.Timer(FLAGS.time_period, main)
     t.start()
 
-if __name__ == '__main__':
+SCHEDULER_INFILE = path.join("./output/scheduler.csv")
 
-    tf.app.run(main=main)
+CLUSTER_INFILE = path.join("./output/cluster2.csv")
+
+# from CLUSTER_INFILE get hive information's file
+HIVE_INFILE = path.join("./output/hive.csv")
+
+# from CLUSTER_INFILE get spark information's file
+SPARK_INFILE = path.join("./output/spark.csv")
+
+# the predictions file of queue hive
+HIVE_PREFILE = path.join("./output/hive_pre.csv")
+
+# the predictions file of spark hive
+SPARK_PREFILE = path.join("./output/spark_pre.csv")
+
+# the dir of hive model' saved
+HIVE_MODEDIR = path.join("./model/hive/")
+
+# the dir of spark model' saved
+SPARK_MODEDIR = path.join("./model/spark/")
+
+FLAGS = None
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.register("type", "bool", lambda  v: v.lower() == "true")
+    parser.add_argument(
+        "--input_file",
+        type=str,
+        default=SPARK_INFILE,
+        help="input file for model trainning."
+    )
+    parser.add_argument(
+        "--out_file",
+        type=str,
+        default=SPARK_PREFILE,
+        help="output file of predict."
+    )
+    parser.add_argument(
+        "--model_dir",
+        type=str,
+        default=SPARK_MODEDIR,
+        help="to save model's dir."
+    )
+    parser.add_argument(
+        "--queue_name",
+        type=str,
+        default="spark",
+        help="the queue name "
+    )
+    parser.add_argument(
+        "--time_period",
+        type=int,
+        default=600,
+        help="the time interval for the scripts to run "
+    )
+
+    FLAGS = parser.parse_args()
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run(main=main, argv=[sys.argv[0]])
 
