@@ -242,10 +242,10 @@ def thread_main():
         queue_information = scheduler_df.ix[queue_name, ["memory", "vCores"]]
         queue_information.insert(0, "times", range(queue_information.size // 2))
         model_input_file = "./model_input/{0}.csv".format(queue_name)
-        # queue_information.to_csv(
-        #     model_input_file,
-        #     index=False,
-        #     header=False)
+        queue_information.to_csv(
+            model_input_file,
+            index=False,
+            header=False)
         model_dir = "./model/{0}".format(queue_name)
 
         train(queue_name, model_input_file, PRE_FILE, model_dir)
