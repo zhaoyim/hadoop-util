@@ -21,7 +21,6 @@ import csv
 from os import path
 
 import multiprocessing
-import numpy
 import threading
 import tensorflow as tf
 
@@ -29,6 +28,7 @@ from tensorflow.contrib.timeseries.python.timeseries import estimators as ts_est
 from tensorflow.contrib.timeseries.python.timeseries import model as ts_model
 import matplotlib
 import argparse
+import sys
 
 matplotlib.use("agg")
 import matplotlib.pyplot as plt
@@ -36,30 +36,7 @@ import matplotlib.pyplot as plt
 from config_util import ConfigUtil
 import numpy as np
 from file_operator import FileOperator
-
-SCHEDULER_INFILE = path.join("./output/scheduler.csv")
-
-CLUSTER_INFILE = path.join("./output/cluster2.csv")
-
-# from CLUSTER_INFILE get hive information's file
-HIVE_INFILE = path.join("./output/hive.csv")
-
-# from CLUSTER_INFILE get spark information's file
-SPARK_INFILE = path.join("./output/spark.csv")
-
-# the predictions file of queue hive
-HIVE_PREFILE = path.join("./output/hive_pre.csv")
-
-# the predictions file of spark hive
-SPARK_PREFILE = path.join("./output/spark_pre.csv")
-
-# the dir of hive model' saved
-HIVE_MODEDIR = path.join("./model/hive/")
-
-# the dir of spark model' saved
-SPARK_MODEDIR = path.join("./model/spark/")
-
-FLAGS = None
+import pandas as pd
 
 
 class _LSTMModel(ts_model.SequentialTimeSeriesModel):
@@ -187,66 +164,18 @@ class _LSTMModel(ts_model.SequentialTimeSeriesModel):
             "Exogenous inputs are not implemented for this example.")
 
 
-def read_scv():
-
-    config_util = ConfigUtil("conf/properties.conf")
-
-    sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
-    spark = []
-    hive = []
-    queue1_name = "spark"
-    queue2_name = "hive"
-    total_mem = 0
-    with open(CLUSTER_INFILE) as cluster:
-        reader = csv.DictReader(cluster)
-        for row in reader:
-            total_mem = float(row.get("totalMB", 0))
-            total_cpu = float(row.get("totalVirtualCores"))
-    if not total_mem:
-        raise ZeroDivisionError
-    print("totalMB", total_mem)
-    total_mem = 11776
-    with open(SCHEDULER_INFILE) as csv_file:
-        reader = csv.DictReader(csv_file)
-        spark_line_num = 0
-        hive_line_num = 0
-        for row in reader:
-            spark_tmp = []
-            hive_tmp = []
-            if row.get("queueName") == queue1_name:
-                for metrices in sch_metrices:
-                    values = row.get(metrices, 0)
-                    if not values:
-                        break
-                    if metrices == "memory":
-                        values = float(values) / total_mem
-                    elif metrices == "vCores":
-                        values = float(values) / total_cpu
-                    spark_tmp.append(values)
-                spark_tmp.insert(0, spark_line_num)
-                spark_line_num += 1
-                spark.append(spark_tmp)
-            elif row.get("queueName") == queue2_name:
-                for metrices in sch_metrices:
-                    values = row.get(metrices, 0)
-                    if not values:
-                        break
-                    if metrices == "memory":
-                        values = float(values) / total_mem
-                    elif metrices == "vCores":
-                        values = float(values) / total_cpu
-                    hive_tmp.append(values)
-                hive_tmp.insert(0, hive_line_num)
-                hive_line_num += 1
-                hive.append(hive_tmp)
-
-    FileOperator.write_list_tocsv(spark, SPARK_INFILE)
-    FileOperator.write_list_tocsv(hive, HIVE_INFILE)
-
-
-def train(csv_file_name, pre_file_name, model_dir):
+def train(queue_name, csv_file_name, pre_file_name, model_dir):
+    """
+    :param queue_name: the queue_name of the hadoop
+    :param csv_file_name: the input file to trainning model
+    :param pre_file_name: the output file of predict
+    :param model_dir: the dir to save model
+    """
     tf.logging.set_verbosity(tf.logging.INFO)
+<<<<<<< HEAD
     read_scv()
+=======
+>>>>>>> dev
     csv_file_name = path.join(csv_file_name)
     pre_file_name = path.join(pre_file_name)
     reader = tf.contrib.timeseries.CSVReader(
@@ -261,7 +190,7 @@ def train(csv_file_name, pre_file_name, model_dir):
         model=_LSTMModel(num_features=2, num_units=256),
         optimizer=tf.train.AdamOptimizer(0.001), model_dir=model_dir)
 
-    estimator.train(input_fn=train_input_fn, steps=1000)
+    estimator.train(input_fn=train_input_fn, steps=FLAGS.train_step)
     evaluation_input_fn = tf.contrib.timeseries.WholeDatasetInputFn(reader)
     evaluation = estimator.evaluate(input_fn=evaluation_input_fn, steps=1,
                                     )
@@ -269,7 +198,7 @@ def train(csv_file_name, pre_file_name, model_dir):
     # Predict starting after the evaluation
     (predictions,) = tuple(estimator.predict(
         input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
-            evaluation, steps=100)))
+            evaluation, steps=FLAGS.predict_step)))
 
     observed_times = evaluation["times"][0]
     observed = evaluation["observed"][0, :, :]
@@ -277,11 +206,13 @@ def train(csv_file_name, pre_file_name, model_dir):
     evaluated = evaluation["mean"][0]
     predicted_times = predictions['times']
     predicted = predictions["mean"]
+    result = ((times, memory, cpu, queue_name) for
+              times in predicted_times for memory in predicted[0]
+              for cpu in predicted[1])
 
-    result = zip(predicted_times, predicted)
-    FileOperator.write_list_tocsv(result, pre_file_name)
+    FileOperator.write_list_tocsv(result, pre_file_name, model="a")
 
-    plt.figure(figsize=(50, 10))
+    plt.figure(figsize=(15, 2))
     plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
     observed_lines = plt.plot(observed_times, observed, label="observation", color="k")
     evaluated_lines = plt.plot(evaluated_times, evaluated, label="evaluation", color="g")
@@ -291,20 +222,89 @@ def train(csv_file_name, pre_file_name, model_dir):
     plt.savefig('predict_result.png')
 
 
+def thread_main():
+    """
+    for queue to trainning model and predict
+    """
+
+    config_util = ConfigUtil("conf/properties.conf")
+
+    sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
+    cluster_df = pd.read_csv(CLUSTER_INFILE)
+    total_mem = cluster_df["totalMB"].values[0]
+    total_cpu = cluster_df["totalVirtualCores"].values[0]
+
+    scheduler_df = pd.read_csv(SCHEDULER_INFILE)
+    scheduler_df = scheduler_df.dropna(how="any", axis=0)
+
+    scheduler_df["memory"] = scheduler_df["memory"] / total_mem
+    scheduler_df["vCores"] = scheduler_df["vCores"] / total_cpu
+
+    queue_names = set(scheduler_df["queueName"].values)
+    scheduler_df = scheduler_df.set_index("queueName")
+
+    FileOperator.makesure_file_exits("model_input")
+    FileOperator.makesure_file_exits("model_out")
+    FileOperator.makesure_file_exits("model")
+
+    # empty the pre_file
+    FileOperator.write_list_tocsv([], PRE_FILE)
+
+    for queue_name in queue_names:
+        queue_information = scheduler_df.ix[queue_name, ["memory", "vCores"]]
+        queue_information.insert(0, "times", range(queue_information.size // 2))
+        model_input_file = "./model_input/{0}.csv".format(queue_name)
+        queue_information.to_csv(
+            model_input_file,
+            index=False,
+            header=False)
+        model_dir = "./model/{0}".format(queue_name)
+
+        train(queue_name, model_input_file, PRE_FILE, model_dir)
+
+
 def main(_):
-    time_period = 600
+
     pools = list()
     pools.append(multiprocessing.Process(
-        target=train, args=(HIVE_INFILE, HIVE_PREFILE, HIVE_MODEDIR)))
-    pools.append(multiprocessing.Process(
-        target=train, args=(SPARK_INFILE, SPARK_PREFILE, SPARK_MODEDIR)))
-
+        target=thread_main))
     for pool in pools:
         pool.start()
-    t = threading.Timer(time_period, main)
+    t = threading.Timer(FLAGS.time_period, main)
     t.start()
 
-if __name__ == '__main__':
+SCHEDULER_INFILE = path.join("./output/scheduler.csv")
 
-    tf.app.run(main=main)
+CLUSTER_INFILE = path.join("./output/cluster2.csv")
+
+PRE_FILE = path.join("./model_out/prediction.csv")
+
+FLAGS = None
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.register("type", "bool", lambda  v: v.lower() == "true")
+
+    parser.add_argument(
+        "--time_period",
+        type=int,
+        default=600,
+        help="the time interval for the scripts to run "
+    )
+    parser.add_argument(
+        "--train_step",
+        type=int,
+        default=1000,
+        help="the step to training  "
+    )
+    parser.add_argument(
+        "--predict_step",
+        type=int,
+        default=100,
+        help="the step to predict "
+    )
+
+    FLAGS = parser.parse_args()
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run(main=main, argv=[sys.argv[0]])
 
