@@ -172,10 +172,7 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     :param model_dir: the dir to save model
     """
     tf.logging.set_verbosity(tf.logging.INFO)
-<<<<<<< HEAD
-    read_scv()
-=======
->>>>>>> dev
+
     csv_file_name = path.join(csv_file_name)
     pre_file_name = path.join(pre_file_name)
     reader = tf.contrib.timeseries.CSVReader(
@@ -207,7 +204,7 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     predicted_times = predictions['times']
     predicted = predictions["mean"]
     result = ((times, memory, cpu, queue_name) for
-              times in predicted_times for memory in predicted[0]
+              times in evaluation["times"][0] for memory in predicted[0]
               for cpu in predicted[1])
 
     FileOperator.write_list_tocsv(result, pre_file_name, model="a")
