@@ -202,13 +202,19 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     evaluated_times = evaluation["times"][0]
     evaluated = evaluation["mean"][0]
     predicted_times = predictions['times']
+<<<<<<< HEAD
     predicted = predictions["mean"]
     result = ((times, memory, cpu, queue_name) for
               times in evaluation["times"][0] for memory in predicted[0]
               for cpu in predicted[1])
+=======
+    predicted = list(predictions["mean"])
+>>>>>>> dev
 
+    result = ((times, queue_name, mem_cpu)
+              for times, mem_cpu in zip(predicted_times, predicted))
     FileOperator.write_list_tocsv(result, pre_file_name, model="a")
-
+    
     plt.figure(figsize=(15, 2))
     plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
     observed_lines = plt.plot(observed_times, observed, label="observation", color="k")
@@ -291,7 +297,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--train_step",
         type=int,
-        default=1000,
+        default=100,
         help="the step to training  "
     )
     parser.add_argument(
