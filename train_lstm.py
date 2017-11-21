@@ -223,7 +223,7 @@ def read_scv():
 
 def train(csv_file_name, pre_file_name, model_dir):
     tf.logging.set_verbosity(tf.logging.INFO)
-    #read_scv()
+    read_scv()
     csv_file_name = path.join(csv_file_name)
     pre_file_name = path.join(pre_file_name)
     reader = tf.contrib.timeseries.CSVReader(
