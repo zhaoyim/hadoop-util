@@ -2,3 +2,8 @@
 .idea/**
 __pycache__
 log/*
+*.png
+model/*
+model_input/*
+model_out/*
+output/*
