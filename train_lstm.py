@@ -202,7 +202,7 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
 
     FileOperator.write_list_tocsv(result, pre_file_name, model="a")
 
-    plt.figure(figsize=(50, 10))
+    plt.figure(figsize=(15, 2))
     plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
     observed_lines = plt.plot(observed_times, observed, label="observation", color="k")
     evaluated_lines = plt.plot(evaluated_times, evaluated, label="evaluation", color="g")
@@ -218,7 +218,8 @@ def thread_main():
 
     sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
     cluster_df = pd.read_csv(CLUSTER_INFILE)
-    total_mem = cluster_df["totalMB"].values[0]
+    # total_mem = cluster_df["totalMB"].values[0]
+    total_mem = 13460
     total_cpu = cluster_df["totalVirtualCores"].values[0]
 
     scheduler_df = pd.read_csv(SCHEDULER_INFILE)
@@ -241,10 +242,10 @@ def thread_main():
         queue_information = scheduler_df.ix[queue_name, ["memory", "vCores"]]
         queue_information.insert(0, "times", range(queue_information.size // 2))
         model_input_file = "./model_input/{0}.csv".format(queue_name)
-        queue_information.to_csv(
-            model_input_file,
-            index=False,
-            header=False)
+        # queue_information.to_csv(
+        #     model_input_file,
+        #     index=False,
+        #     header=False)
         model_dir = "./model/{0}".format(queue_name)
 
         train(queue_name, model_input_file, PRE_FILE, model_dir)
@@ -281,7 +282,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--train_step",
         type=int,
-        default=100,
+        default=1000,
         help="the step to training  "
     )
     parser.add_argument(
