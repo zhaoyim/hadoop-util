@@ -165,6 +165,12 @@ class _LSTMModel(ts_model.SequentialTimeSeriesModel):
 
 
 def train(queue_name, csv_file_name, pre_file_name, model_dir):
+    """
+    :param queue_name: the queue_name of the hadoop
+    :param csv_file_name: the input file to trainning model
+    :param pre_file_name: the output file of predict
+    :param model_dir: the dir to save model
+    """
     tf.logging.set_verbosity(tf.logging.INFO)
     csv_file_name = path.join(csv_file_name)
     pre_file_name = path.join(pre_file_name)
@@ -213,13 +219,15 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
 
 
 def thread_main():
+    """
+    for queue to trainning model and predict
+    """
 
     config_util = ConfigUtil("conf/properties.conf")
 
     sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
     cluster_df = pd.read_csv(CLUSTER_INFILE)
-    # total_mem = cluster_df["totalMB"].values[0]
-    total_mem = 13460
+    total_mem = cluster_df["totalMB"].values[0]
     total_cpu = cluster_df["totalVirtualCores"].values[0]
 
     scheduler_df = pd.read_csv(SCHEDULER_INFILE)
