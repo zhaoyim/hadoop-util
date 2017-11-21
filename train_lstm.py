@@ -28,13 +28,38 @@ import tensorflow as tf
 from tensorflow.contrib.timeseries.python.timeseries import estimators as ts_estimators
 from tensorflow.contrib.timeseries.python.timeseries import model as ts_model
 import matplotlib
-from tensorflow.contrib.timeseries.python.timeseries import  NumpyReader
+import argparse
 
 matplotlib.use("agg")
 import matplotlib.pyplot as plt
 
 from config_util import ConfigUtil
 import numpy as np
+from file_operator import FileOperator
+
+SCHEDULER_INFILE = path.join("./output/scheduler.csv")
+
+CLUSTER_INFILE = path.join("./output/cluster2.csv")
+
+# from CLUSTER_INFILE get hive information's file
+HIVE_INFILE = path.join("./output/hive.csv")
+
+# from CLUSTER_INFILE get spark information's file
+SPARK_INFILE = path.join("./output/spark.csv")
+
+# the predictions file of queue hive
+HIVE_PREFILE = path.join("./output/hive_pre.csv")
+
+# the predictions file of spark hive
+SPARK_PREFILE = path.join("./output/spark_pre.csv")
+
+# the dir of hive model' saved
+HIVE_MODEDIR = path.join("./model/hive/")
+
+# the dir of spark model' saved
+SPARK_MODEDIR = path.join("./model/spark/")
+
+FLAGS = None
 
 
 class _LSTMModel(ts_model.SequentialTimeSeriesModel):
@@ -128,7 +153,8 @@ class _LSTMModel(ts_model.SequentialTimeSeriesModel):
         state_from_time, prediction, lstm_state = state
         with tf.control_dependencies(
                 [tf.assert_equal(current_times, state_from_time)]):
-            transformed_values = self._transform(current_values)
+            transformed_values = self._scale_data(current_values)
+            #transformed_values = self._transform(current_values)
             # Use mean squared error across features for the loss.
             predictions["loss"] = tf.reduce_mean(
                 (prediction - transformed_values) ** 2, axis=-1)
@@ -144,7 +170,8 @@ class _LSTMModel(ts_model.SequentialTimeSeriesModel):
             inputs=previous_observation_or_prediction, state=lstm_state)
         next_prediction = self._predict_from_lstm_output(lstm_output)
         new_state_tuple = (current_times, next_prediction, new_lstm_state)
-        return new_state_tuple, {"mean": self._de_transform(next_prediction)}
+        #return new_state_tuple, {"mean": self._de_transform(next_prediction)}
+        return new_state_tuple, {"mean": self._scale_back_data(next_prediction)}
 
     def _imputation_step(self, current_times, state):
         """Advance model state across a gap."""
@@ -161,48 +188,84 @@ class _LSTMModel(ts_model.SequentialTimeSeriesModel):
 
 
 def read_scv():
-    csv_file_name = path.join("./output/scheduler.csv")
+
     config_util = ConfigUtil("conf/properties.conf")
+
     sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
-    y = []
-    with open(csv_file_name) as csv_file, open("./output/data.csv", "w") as data:
-        reader = csv.DictReader(csv_file)
-        line_num = 0
+    spark = []
+    hive = []
+    queue1_name = "spark"
+    queue2_name = "hive"
+    total_mem = 0
+    with open(CLUSTER_INFILE) as cluster:
+        reader = csv.DictReader(cluster)
         for row in reader:
-            line_num += 1
-            tmp = []
-            for metrices in sch_metrices:
-                values = 0 if not row.get(metrices, 0) else row.get(metrices, 0)
-                tmp.append(values)
-            y.append(tmp)
+            total_mem = float(row.get("totalMB", 0))
+            total_cpu = float(row.get("totalVirtualCores"))
+    if not total_mem:
+        raise ZeroDivisionError
+    print("totalMB", total_mem)
+    total_mem = 11776
+    with open(SCHEDULER_INFILE) as csv_file:
+        reader = csv.DictReader(csv_file)
+        spark_line_num = 0
+        hive_line_num = 0
+        for row in reader:
+            spark_tmp = []
+            hive_tmp = []
+            if row.get("queueName") == queue1_name:
+                for metrices in sch_metrices:
+                    values = row.get(metrices, 0)
+                    if not values:
+                        break
+                    if metrices == "memory":
+                        values = float(values) / total_mem
+                    elif metrices == "vCores":
+                        values = float(values) / total_cpu
+                    spark_tmp.append(values)
+                spark_tmp.insert(0, spark_line_num)
+                spark_line_num += 1
+                spark.append(spark_tmp)
+            elif row.get("queueName") == queue2_name:
+                for metrices in sch_metrices:
+                    values = row.get(metrices, 0)
+                    if not values:
+                        break
+                    if metrices == "memory":
+                        values = float(values) / total_mem
+                    elif metrices == "vCores":
+                        values = float(values) / total_cpu
+                    hive_tmp.append(values)
+                hive_tmp.insert(0, hive_line_num)
+                hive_line_num += 1
+                hive.append(hive_tmp)
+
+    FileOperator.write_list_tocsv(spark, SPARK_INFILE)
+    FileOperator.write_list_tocsv(hive, HIVE_INFILE)
 
 
-
-def train():
+def train(csv_file_name, pre_file_name, model_dir):
     tf.logging.set_verbosity(tf.logging.INFO)
-    # csv_file_name = path.join("./output/scheduler2.csv")
-    # reader = tf.contrib.timeseries.CSVReader(
-    #     csv_file_name,
-    #     column_names=((tf.contrib.timeseries.TrainEvalFeatures.TIMES,)
-    #                   + (tf.contrib.timeseries.TrainEvalFeatures.VALUES,) * 7))
-    x, y = read_scv()
-    print(x, y)
-    data = {
-        tf.contrib.timeseries.TrainEvalFeatures.TIMES: x,
-        tf.contrib.timeseries.TrainEvalFeatures.VALUES: y * 7,
-    }
+    #read_scv()
+    csv_file_name = path.join(csv_file_name)
+    pre_file_name = path.join(pre_file_name)
+    reader = tf.contrib.timeseries.CSVReader(
+        csv_file_name,
+        column_names=((tf.contrib.timeseries.TrainEvalFeatures.TIMES,)
+                      + (tf.contrib.timeseries.TrainEvalFeatures.VALUES,) * 2))
 
-    reader = NumpyReader(data)
     train_input_fn = tf.contrib.timeseries.RandomWindowInputFn(
-        reader, batch_size=2, window_size=10)
+        reader, batch_size=8, window_size=32)
 
     estimator = ts_estimators.TimeSeriesRegressor(
-        model=_LSTMModel(num_features=10, num_units=20),
-        optimizer=tf.train.AdamOptimizer(0.001))
+        model=_LSTMModel(num_features=2, num_units=256),
+        optimizer=tf.train.AdamOptimizer(0.001), model_dir=model_dir)
 
-    estimator.train(input_fn=train_input_fn, steps=50)
+    estimator.train(input_fn=train_input_fn, steps=1000)
     evaluation_input_fn = tf.contrib.timeseries.WholeDatasetInputFn(reader)
-    evaluation = estimator.evaluate(input_fn=evaluation_input_fn, steps=1)
+    evaluation = estimator.evaluate(input_fn=evaluation_input_fn, steps=1,
+                                    )
+
     # Predict starting after the evaluation
     (predictions,) = tuple(estimator.predict(
         input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
@@ -215,19 +278,33 @@ def train():
     predicted_times = predictions['times']
     predicted = predictions["mean"]
 
-    plt.figure(figsize=(15, 10))
+    result = zip(predicted_times, predicted)
+    FileOperator.write_list_tocsv(result, pre_file_name)
+
+    plt.figure(figsize=(50, 10))
     plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
     observed_lines = plt.plot(observed_times, observed, label="observation", color="k")
     evaluated_lines = plt.plot(evaluated_times, evaluated, label="evaluation", color="g")
     predicted_lines = plt.plot(predicted_times, predicted, label="prediction", color="r")
     plt.legend(handles=[observed_lines[0], evaluated_lines[0], predicted_lines[0]],
                loc="upper left")
-    plt.savefig('predict_result2.png')
+    plt.savefig('predict_result.png')
 
+
+def main(_):
+    time_period = 600
+    pools = list()
+    pools.append(multiprocessing.Process(
+        target=train, args=(HIVE_INFILE, HIVE_PREFILE, HIVE_MODEDIR)))
+    pools.append(multiprocessing.Process(
+        target=train, args=(SPARK_INFILE, SPARK_PREFILE, SPARK_MODEDIR)))
+
+    for pool in pools:
+        pool.start()
+    t = threading.Timer(time_period, main)
+    t.start()
 
 if __name__ == '__main__':
-    train()
-    # time_period = 600
-    # t = threading.Timer(
-    #     time_period, train)
-    # t.start()
+
+    tf.app.run(main=main)
+

@@ -284,7 +284,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_interval",
         type=int,
-        default=10,
+        default=1,
         help="to collector job's information which job's finished time begin "
              "before now.time_format:m , time_interval:20 means collectors "
              "job's information which finished in lasted 20 minutes, "
@@ -300,7 +300,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=600,
+        default=60,
         help="the scripts run's time period"
     )
 

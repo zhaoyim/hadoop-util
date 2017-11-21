@@ -11,7 +11,7 @@ import csv
 class FileOperator(object):
 
     @staticmethod
-    def write_to_csv(data, file,  headers, write_header=True, model="w"):
+    def write_to_csv(data, file,  headers, write_header=True, model="w+"):
         """
         write data to csv
         :param headers: the csv headers
@@ -33,7 +33,14 @@ class FileOperator(object):
                 logger.info("write data to {0} success".format(file))
 
     @staticmethod
-    def write_to_json(data, file, model="w"):
+    def write_list_tocsv(data, file, model="w+"):
+        with open(file, mode=model) as csv_file:
+            csv_writer = csv.writer(csv_file)
+            for data in data:
+                csv_writer.writerow(data)
+
+    @staticmethod
+    def write_to_json(data, file, model="w+"):
         with open(file, model) as f:
             json.dump(data, f)
 

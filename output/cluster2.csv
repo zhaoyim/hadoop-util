@@ -1,2 +1,2 @@
 appsSubmitted,appsCompleted,appsPending,appsRunning,appsFailed,appsKilled,reservedMB,availableMB,allocatedMB,reservedVirtualCores,availableVirtualCores,allocatedVirtualCores,containersAllocated,containersReserved,containersPending,totalMB,totalVirtualCores,totalNodes,lostNodes,unhealthyNodes,decommissionedNodes,rebootedNodes,activeNodes
-369,327,0,0,0,42,0,11776,0,0,12,0,0,0,0,11776,12,2,0,0,0,0,2
+14,6,0,2,0,6,5120,4608,2048,1,9,2,2,1,2,6656,11,2,0,0,0,0,2

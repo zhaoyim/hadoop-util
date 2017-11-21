@@ -458,3 +458,190 @@ WARNING 2017-11-16 13:56:16,922 hadoop_util.py[line:161]: dit not get any data f
 WARNING 2017-11-16 13:56:58,715 hadoop_util.py[line:162]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510811918651, 'finishedTimeEnd': 1510812518651}
 WARNING 2017-11-16 13:57:35,306 hadoop_util.py[line:186]: this application application_1509436254805_0418 is not a spark type application
 WARNING 2017-11-16 13:58:37,249 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 14:08:37,254 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 14:18:37,260 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 14:28:37,266 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 14:38:37,270 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 14:48:37,272 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 15:08:37,285 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 15:08:37,286 hadoop_util.py[line:188]: this application application_1509436254805_0417 is not a spark type application
+ERROR 2017-11-16 15:18:37,275 hadoop_util.py[line:66]: <urlopen error [Errno 111] Connection refused>
+ERROR 2017-11-16 15:18:37,275 hadoop_util.py[line:95]: <urlopen error [Errno 111] Connection refused>
+ERROR 2017-11-16 15:28:37,279 hadoop_util.py[line:66]: <urlopen error [Errno 111] Connection refused>
+ERROR 2017-11-16 15:28:37,279 hadoop_util.py[line:95]: <urlopen error [Errno 111] Connection refused>
+WARNING 2017-11-16 15:39:19,564 hadoop_util.py[line:188]: this application application_1509436254805_0418 is not a spark type application
+WARNING 2017-11-16 15:47:05,084 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:48:05,101 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:49:05,102 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:50:05,099 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:51:05,099 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:52:05,123 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:53:05,108 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:54:05,114 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:55:05,118 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:56:05,126 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:57:05,130 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:58:05,135 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 15:59:05,134 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 16:00:05,138 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 16:01:05,144 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 16:02:05,622 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 16:03:05,189 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510818430794, 'finishedTimeEnd': 1510818490794}
+WARNING 2017-11-16 16:07:04,976 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:08:05,116 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:09:04,992 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:10:04,991 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:11:04,997 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:12:04,996 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:13:05,514 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:14:05,024 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:15:05,024 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:16:05,014 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:17:09,148 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:22:47,079 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:22:47,080 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:22:48,430 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:24:03,811 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:24:03,858 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:24:03,886 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:24:42,281 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:25:06,928 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:26:09,048 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:27:05,352 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:28:23,105 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:29:05,342 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:30:05,771 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:31:05,232 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:32:05,236 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:33:05,092 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:34:05,099 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:35:05,106 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:36:05,123 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:37:05,120 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:38:05,121 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:39:05,122 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:40:05,144 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:41:05,996 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:42:05,288 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:43:05,138 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:44:05,143 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:45:05,146 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:46:05,151 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:47:05,177 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:48:05,177 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:49:05,198 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:50:05,180 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:51:05,183 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:52:05,192 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:53:09,516 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:54:05,193 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:55:05,194 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:56:05,240 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:57:05,207 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:58:05,389 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 16:59:05,286 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:00:05,255 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:01:05,221 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:02:05,227 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:03:05,234 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:04:05,275 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:05:05,607 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:06:05,243 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:07:05,310 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:08:05,278 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:09:05,258 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:10:05,263 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:11:05,272 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:12:05,295 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:13:05,284 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:14:05,286 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:15:05,331 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:16:05,348 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:17:06,163 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:18:05,306 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:19:05,320 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:20:05,313 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:21:05,322 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:22:05,328 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:23:05,330 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:24:05,337 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:25:05,337 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:26:05,344 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:27:05,351 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:28:05,350 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:29:05,358 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:30:05,360 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:31:05,369 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:32:05,380 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:33:05,379 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:34:05,387 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:35:05,386 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:36:05,390 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:37:05,400 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:38:05,402 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:39:05,406 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:40:05,413 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:41:05,426 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:42:05,418 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:43:05,418 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:44:05,424 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:45:05,427 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:46:05,433 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:47:05,437 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:48:05,446 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:49:05,452 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:50:05,456 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:51:05,459 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:52:05,469 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:53:05,468 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:54:05,473 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:55:05,475 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:56:05,481 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:57:05,486 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:58:05,488 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 17:59:05,495 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:00:05,503 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:01:05,499 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:02:05,510 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:03:05,512 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:04:05,516 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:05:05,519 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:06:05,540 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:07:05,536 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:08:05,546 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:09:05,545 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:10:05,553 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:11:05,552 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:12:05,561 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:13:05,559 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:14:05,562 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:15:05,568 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:16:05,572 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:17:05,589 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:18:05,593 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:19:05,602 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:20:05,602 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:21:05,607 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:22:05,614 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:23:05,616 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:24:05,623 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:25:05,628 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:26:05,636 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:27:05,633 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:28:05,637 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:29:05,643 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:30:05,654 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:31:05,651 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:32:05,661 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:33:05,668 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:34:05,672 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:35:05,671 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:36:05,677 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:37:05,681 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:38:05,701 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:39:05,699 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+WARNING 2017-11-16 18:40:05,695 hadoop_util.py[line:165]: dit not get any data from parameters {'state': 'finished', 'finishedTimeBegin': 1510820521074, 'finishedTimeEnd': 1510820581074}
+ERROR 2017-11-16 18:42:05,693 hadoop_util.py[line:95]: <urlopen error [Errno 111] Connection refused>
+ERROR 2017-11-16 18:42:05,693 hadoop_util.py[line:66]: <urlopen error [Errno 111] Connection refused>
+ERROR 2017-11-16 18:42:08,805 hadoop_util.py[line:95]: <urlopen error [Errno 111] Connection refused>
+ERROR 2017-11-16 18:42:08,805 hadoop_util.py[line:66]: <urlopen error [Errno 111] Connection refused>
