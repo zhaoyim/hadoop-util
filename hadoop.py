@@ -206,3 +206,116 @@ class HadoopUtil(object):
         print(type(result))
 
 
+def thread_main(query_parameters):
+    pools = list()
+    pools.append(multiprocessing.Process(
+        target=hadoop_util.get_cluster_information))
+    pools.append(multiprocessing.Process(
+        target=hadoop_util.get_cluster_scheduler))
+    pools.append(multiprocessing.Process(
+        target=hadoop_util.get_applications_information, args=(query_parameters,)))
+    pools.append(multiprocessing.Process(
+        target=hadoop_util.get_commonjobs_information)
+    )
+
+    for pool in pools:
+        pool.daemon = True
+        pool.start()
+        pool.join()
+    # call lichongmin's predict function
+    # ...
+
+    t = threading.Timer(
+        FLAGS.time_period, thread_main, args=(query_parameters,))
+    t.start()
+
+
+def main():
+    query_parameters = {"state": FLAGS.state}
+    sw = {
+        'w': lambda: TimeUtil.get_time_weeks(FLAGS.time_interval),
+        'd': lambda: TimeUtil.get_time_days(FLAGS.time_interval),
+        'h': lambda: TimeUtil.get_time_hours(FLAGS.time_interval),
+        'm': lambda: TimeUtil.get_time_minutes(FLAGS.time_interval),
+        's': lambda: TimeUtil.get_time_seconds(FLAGS.time_interval),
+    }
+    if FLAGS.time_interval > 0:
+        finished_time_begin, finished_time_end = sw[FLAGS.time_format]()
+        query_parameters["finishedTimeBegin"] = finished_time_begin
+        query_parameters["finishedTimeEnd"] = finished_time_end
+
+    thread_main(query_parameters)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.register("type", "bool", lambda v: v.lower() == "true")
+    parser.add_argument(
+        "--sparkjob_file",
+        type=str,
+        default="./output/sparkjob.csv",
+        help="the output file of the spark job's information."
+    )
+    parser.add_argument(
+        "--commonjob_file",
+        type=str,
+        default="./output/commonjob.csv",
+        help="the output file of the common job's information."
+    )
+    parser.add_argument(
+        "--app_file",
+        type=str,
+        default="./output/app.csv",
+        help="the output file of the job's information."
+    )
+    parser.add_argument(
+        "--scheduler_file",
+        type=str,
+        default="./output/scheduler.csv",
+        help="the output file of the scheduler's information."
+    )
+    parser.add_argument(
+        "--cluster_file",
+        type=str,
+        default='./output/cluster.csv',
+        help="the output file of the cluster's information."
+    )
+    parser.add_argument(
+        "--time_format",
+        type=str,
+        choices=['w', 'd', 'h', 'm', 's'],
+        default='m',
+        help="w: week, d:day, h:hour, m:minutes, s:second"
+    )
+    parser.add_argument(
+        "--time_interval",
+        type=int,
+        default=1,
+        help="to collector job's information which job's finished time begin "
+             "before now.time_format:m , time_interval:20 means collectors "
+             "job's information which finished in lasted 20 minutes, "
+             "if time_interval < 0 then collecotrs all"
+    )
+    parser.add_argument(
+        "--state",
+        type=str,
+        choices=["finished", "accepted", "running"],
+        default="finished",
+        help="the job's state"
+    )
+    parser.add_argument(
+        "--time_period",
+        type=int,
+        default=60,
+        help="the scripts run's time period"
+    )
+
+    FLAGS = parser.parse_args()
+
+    hadoop_util = HadoopUtil(
+        FLAGS.sparkjob_file,
+        FLAGS.commonjob_file,
+        FLAGS.app_file,
+        FLAGS.scheduler_file,
+        FLAGS.cluster_file)
+    main()
