@@ -193,6 +193,10 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
                                     )
 
     # Predict starting after the evaluation
+    # (predictions,) = tuple(estimator.predict(
+    #     input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
+    #         evaluation, steps=FLAGS.predict_step)))
+
     (predictions,) = tuple(estimator.predict(
         input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
             evaluation, steps=FLAGS.predict_step)))
@@ -203,12 +207,14 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     evaluated = evaluation["mean"][0]
     predicted_times = predictions['times']
 
-    predicted = predictions["mean"]
 
-    result = ((times, queue_name, mem_cpu)
-              for times, mem_cpu in zip(predicted_times, predicted))
-    FileOperator.write_list_tocsv(result, pre_file_name, model="a")
-    
+    predicted = predictions["mean"]
+    df = pd.DataFrame(predicted)
+    df.insert(0, "times", predicted_times)
+    df.insert(3, "queue", queue_name)
+    df.to_csv(pre_file_name, header=None, mode="a", index=False)
+
+
     plt.figure(figsize=(15, 2))
     plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
     observed_lines = plt.plot(observed_times, observed, label="observation", color="k")
@@ -246,7 +252,7 @@ def thread_main():
 
     for queue_name in queue_names:
         queue_information = scheduler_df.ix[queue_name, ["memory", "vCores"]]
-        queue_information.insert(0, "times", range(queue_information.size // 2))
+        queue_information.insert(0, "times", range(queue_information.shape[0]))
         model_input_file = "./model_input/{0}.csv".format(queue_name)
         queue_information.to_csv(
             model_input_file,

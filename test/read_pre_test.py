@@ -11,9 +11,8 @@ for data in open(file):
     time_serices = data[0]
     print("----time_serices----")
     print(time_serices)
-    print(data[1])
-    mem_cpu = np.array(data[2][1:-1].split(), dtype=np.float64)
     print("----mem----")
-    print(mem_cpu[0])
+    print(data[1])
     print("------cpu----")
-    print(mem_cpu[1])
+    print(data[2])
+    print(data[3])
