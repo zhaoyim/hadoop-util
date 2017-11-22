@@ -192,6 +192,10 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
                                     )
 
     # Predict starting after the evaluation
+    # (predictions,) = tuple(estimator.predict(
+    #     input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
+    #         evaluation, steps=FLAGS.predict_step)))
+
     (predictions,) = tuple(estimator.predict(
         input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
             evaluation, steps=FLAGS.predict_step)))
@@ -201,12 +205,12 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     evaluated_times = evaluation["times"][0]
     evaluated = evaluation["mean"][0]
     predicted_times = predictions['times']
-    predicted = list(predictions["mean"])
+    predicted = predictions["mean"]
+    df = pd.DataFrame(predicted)
+    df.insert(0, "times", predicted_times)
+    df.insert(3, "queue", queue_name)
+    df.to_csv(pre_file_name, header=None, mode="a", index=False)
 
-    result = ((times, queue_name, mem_cpu)
-              for times, mem_cpu in zip(predicted_times, predicted))
-    FileOperator.write_list_tocsv(result, pre_file_name, model="a")
-    
     plt.figure(figsize=(15, 2))
     plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
     observed_lines = plt.plot(observed_times, observed, label="observation", color="k")
@@ -221,10 +225,6 @@ def thread_main():
     """
     for queue to trainning model and predict
     """
-
-    config_util = ConfigUtil("conf/properties.conf")
-
-    sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
     cluster_df = pd.read_csv(CLUSTER_INFILE)
     total_mem = cluster_df["totalMB"].values[0]
     total_cpu = cluster_df["totalVirtualCores"].values[0]
