@@ -202,14 +202,8 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     evaluated_times = evaluation["times"][0]
     evaluated = evaluation["mean"][0]
     predicted_times = predictions['times']
-<<<<<<< HEAD
+
     predicted = predictions["mean"]
-    result = ((times, memory, cpu, queue_name) for
-              times in evaluation["times"][0] for memory in predicted[0]
-              for cpu in predicted[1])
-=======
-    predicted = list(predictions["mean"])
->>>>>>> dev
 
     result = ((times, queue_name, mem_cpu)
               for times, mem_cpu in zip(predicted_times, predicted))
