@@ -247,7 +247,7 @@ def thread_main():
 
     for queue_name in queue_names:
         queue_information = scheduler_df.ix[queue_name, ["memory", "vCores"]]
-        queue_information.insert(0, "times", range(queue_information.size // 2))
+        queue_information.insert(0, "times", range(queue_information.shape[0]))
         model_input_file = "./model_input/{0}.csv".format(queue_name)
         queue_information.to_csv(
             model_input_file,
