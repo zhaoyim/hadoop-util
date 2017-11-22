@@ -224,9 +224,6 @@ def thread_main():
     for queue to trainning model and predict
     """
 
-    config_util = ConfigUtil("conf/properties.conf")
-
-    sch_metrices = config_util.get_options("scheduler", "sch_metrices").split(',')
     cluster_df = pd.read_csv(CLUSTER_INFILE)
     total_mem = cluster_df["totalMB"].values[0]
     total_cpu = cluster_df["totalVirtualCores"].values[0]
@@ -269,6 +266,9 @@ def main(_):
         pool.start()
     t = threading.Timer(FLAGS.time_period, main)
     t.start()
+    t.join()
+    # call lichongmin's predict and core function
+    # .....
 
 SCHEDULER_INFILE = path.join("./output/scheduler.csv")
 
@@ -285,7 +285,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--time_period",
         type=int,
-        default=600,
+        default=7200,
         help="the time interval for the scripts to run "
     )
     parser.add_argument(
