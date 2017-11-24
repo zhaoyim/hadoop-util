@@ -199,11 +199,13 @@ class HadoopUtil(object):
     def get_commonjobs_information(self):
         jobs_url = self.job_url
         result = HadoopUtil.request_url(jobs_url)
-        result = json.loads(result)["jobs"]["job"]
+        result = json.loads(result)["jobs"]
+        if not result:
+            return
+        result = result["job"]
         headers = result[0].keys()
         FileOperator.write_to_csv(result, self.commonjob_file, headers=headers)
         FileOperator.write_to_json(result, "./output/commonjob.json")
-        print(type(result))
 
 
 def thread_main(query_parameters):

@@ -44533,7 +44533,7 @@ node {
 node {
   name: "Read/ReadVariableOp"
   op: "ReadVariableOp"
-  input: "input_statistics/series_start_mean"
+  input: "input_statistics/overall_feature_mean"
   attr {
     key: "_output_shapes"
     value {
@@ -44579,52 +44579,6 @@ node {
 node {
   name: "Read_1/ReadVariableOp"
   op: "ReadVariableOp"
-  input: "input_statistics/overall_feature_mean"
-  attr {
-    key: "_output_shapes"
-    value {
-      list {
-        shape {
-          dim {
-            size: 2
-          }
-        }
-      }
-    }
-  }
-  attr {
-    key: "dtype"
-    value {
-      type: DT_FLOAT
-    }
-  }
-}
-node {
-  name: "Identity_3"
-  op: "Identity"
-  input: "Read_1/ReadVariableOp"
-  attr {
-    key: "T"
-    value {
-      type: DT_FLOAT
-    }
-  }
-  attr {
-    key: "_output_shapes"
-    value {
-      list {
-        shape {
-          dim {
-            size: 2
-          }
-        }
-      }
-    }
-  }
-}
-node {
-  name: "Read_2/ReadVariableOp"
-  op: "ReadVariableOp"
   input: "input_statistics_auxiliary/max_time_seen"
   attr {
     key: "_output_shapes"
@@ -44643,9 +44597,9 @@ node {
   }
 }
 node {
-  name: "Identity_4"
+  name: "Identity_3"
   op: "Identity"
-  input: "Read_2/ReadVariableOp"
+  input: "Read_1/ReadVariableOp"
   attr {
     key: "T"
     value {
@@ -44663,9 +44617,55 @@ node {
   }
 }
 node {
-  name: "Read_3/ReadVariableOp"
+  name: "Read_2/ReadVariableOp"
   op: "ReadVariableOp"
   input: "input_statistics/series_start_variance"
+  attr {
+    key: "_output_shapes"
+    value {
+      list {
+        shape {
+          dim {
+            size: 2
+          }
+        }
+      }
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "Identity_4"
+  op: "Identity"
+  input: "Read_2/ReadVariableOp"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_output_shapes"
+    value {
+      list {
+        shape {
+          dim {
+            size: 2
+          }
+        }
+      }
+    }
+  }
+}
+node {
+  name: "Read_3/ReadVariableOp"
+  op: "ReadVariableOp"
+  input: "input_statistics/overall_feature_var"
   attr {
     key: "_output_shapes"
     value {
@@ -44711,15 +44711,12 @@ node {
 node {
   name: "Read_4/ReadVariableOp"
   op: "ReadVariableOp"
-  input: "input_statistics/overall_feature_var"
+  input: "input_statistics/start_time"
   attr {
     key: "_output_shapes"
     value {
       list {
         shape {
-          dim {
-            size: 2
-          }
         }
       }
     }
@@ -44727,7 +44724,7 @@ node {
   attr {
     key: "dtype"
     value {
-      type: DT_FLOAT
+      type: DT_INT64
     }
   }
 }
@@ -44738,7 +44735,7 @@ node {
   attr {
     key: "T"
     value {
-      type: DT_FLOAT
+      type: DT_INT64
     }
   }
   attr {
@@ -44746,9 +44743,6 @@ node {
     value {
       list {
         shape {
-          dim {
-            size: 2
-          }
         }
       }
     }
@@ -44757,7 +44751,7 @@ node {
 node {
   name: "Read_5/ReadVariableOp"
   op: "ReadVariableOp"
-  input: "input_statistics/start_time"
+  input: "input_statistics_auxiliary/chunk_count"
   attr {
     key: "_output_shapes"
     value {
@@ -44797,7 +44791,7 @@ node {
 node {
   name: "Read_6/ReadVariableOp"
   op: "ReadVariableOp"
-  input: "input_statistics_auxiliary/chunk_count"
+  input: "input_statistics_auxiliary/example_count"
   attr {
     key: "_output_shapes"
     value {
@@ -44837,12 +44831,15 @@ node {
 node {
   name: "Read_7/ReadVariableOp"
   op: "ReadVariableOp"
-  input: "input_statistics_auxiliary/example_count"
+  input: "input_statistics/series_start_mean"
   attr {
     key: "_output_shapes"
     value {
       list {
         shape {
+          dim {
+            size: 2
+          }
         }
       }
     }
@@ -44850,7 +44847,7 @@ node {
   attr {
     key: "dtype"
     value {
-      type: DT_INT64
+      type: DT_FLOAT
     }
   }
 }
@@ -44861,7 +44858,7 @@ node {
   attr {
     key: "T"
     value {
-      type: DT_INT64
+      type: DT_FLOAT
     }
   }
   attr {
@@ -44869,6 +44866,9 @@ node {
     value {
       list {
         shape {
+          dim {
+            size: 2
+          }
         }
       }
     }
@@ -45101,7 +45101,7 @@ node {
         dtype: DT_STRING
         tensor_shape {
         }
-        string_val: "_temp_998db544baeb4d559777ca1b2cfb2d1c/part"
+        string_val: "_temp_5f6e5a3798af4946b83ababebe4eb794/part"
       }
     }
   }
@@ -45350,16 +45350,16 @@ node {
   input: "global_step"
   input: "head/OptimizeLoss/beta1_power"
   input: "head/OptimizeLoss/beta2_power"
-  input: "Read_1/ReadVariableOp"
-  input: "Read_4/ReadVariableOp"
   input: "Read/ReadVariableOp"
   input: "Read_3/ReadVariableOp"
-  input: "Read_5/ReadVariableOp"
-  input: "Read_11/ReadVariableOp"
-  input: "Read_6/ReadVariableOp"
   input: "Read_7/ReadVariableOp"
-  input: "Read_8/ReadVariableOp"
   input: "Read_2/ReadVariableOp"
+  input: "Read_4/ReadVariableOp"
+  input: "Read_11/ReadVariableOp"
+  input: "Read_5/ReadVariableOp"
+  input: "Read_6/ReadVariableOp"
+  input: "Read_8/ReadVariableOp"
+  input: "Read_1/ReadVariableOp"
   input: "Read_10/ReadVariableOp"
   input: "Read_9/ReadVariableOp"
   input: "lstm_cell/lstm_cell/bias"
