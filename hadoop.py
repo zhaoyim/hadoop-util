@@ -252,6 +252,7 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.register("type", "bool", lambda v: v.lower() == "true")
+    FileOperator.makesure_file_exits("./output/")
     parser.add_argument(
         "--sparkjob_file",
         type=str,
