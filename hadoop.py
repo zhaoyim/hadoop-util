@@ -5,6 +5,7 @@ Created on  : 17-10-30 上午10:23
 @author: chenxf@chinaskycloud.com
 """
 
+from __future__ import division
 import json
 import os
 import argparse
@@ -49,8 +50,12 @@ class HadoopUtil(object):
         self.application_url = self.confing_util.get_options("url", "application_url")
         self.job_metrics = self.confing_util.get_options("job", "job_metrices")
         self.job_url = self.confing_util.get_options("url", "job_url")
+        self.memcpu_info = {}
 
     def get_cluster_information(self):
+        """
+        get cluster infromation
+        """
         url = self.hadoop_url + "metrics"
         write_header = True
         cluster_file = os.path.join(self.file_path, "cluster.csv")
@@ -62,12 +67,16 @@ class HadoopUtil(object):
             results = [json.loads(results)["clusterMetrics"]]
         except Exception as error:
             logger.error(error)
+
+        self.memcpu_info["memory"] = results[0].get('totalMB', 0)
+        self.memcpu_info["vCores"] = results[0].get('totalVirtualCores', 0)
+        self.get_cluster_scheduler()
         headers = results[0].keys()
+
         FileOperator.write_to_csv(results, cluster_file,
                                   headers=headers, write_header=write_header,model="a+")
         FileOperator.write_to_csv(results, cluster_file2,
                                   headers=headers, model="w")
-        #FileOperator.write_to_json(results, "./output/cluster.json", model="a+")
 
     def get_cluster_scheduler(self):
         """
@@ -80,19 +89,18 @@ class HadoopUtil(object):
 
         try:
             results = urlopen(url, timeout=2000).read()
-
             results = json.loads(results)
-
             results = results['scheduler']['schedulerInfo']['queues']['queue']
-
-            results_copy = results[0].copy()
-
-            for key, value in results_copy['resourcesUsed'].items():
-                results[0][key] = value
+            print(self.memcpu_info)
+            for scheduler_info in results:
+                results_copy = scheduler_info.copy()
+                for key, value in results_copy['resourcesUsed'].items():
+                    scheduler_info[key] = value / self.memcpu_info[key]
         except KeyError as error:
             logger.error("key error {0}".format(error))
         except Exception as error:
             logger.error(error)
+
         write_header = True
         if FileOperator.file_exits(scheduler_file):
             write_header = False
@@ -101,7 +109,6 @@ class HadoopUtil(object):
                                   headers=headers, write_header=write_header, model="a+")
         FileOperator.write_to_csv(results, scheduler_file2,
                                   headers=headers, write_header=write_header,model="w+")
-        #FileOperator.write_to_json(results, "./output/scheduler.json", model="a+")
 
     @staticmethod
     def request_url(url):
@@ -168,7 +175,6 @@ class HadoopUtil(object):
             logger.error(error)
         else:
             FileOperator.write_to_csv(list_result, app_file, headers=headers)
-            #FileOperator.write_to_json(list_result, "./output/apps.json")
             self.get_sparkjobs_information(list_result)
 
     def get_sparkjobs_information(self, applications):
@@ -216,19 +222,14 @@ def thread_main(query_parameters):
     pools.append(multiprocessing.Process(
         target=hadoop_util.get_cluster_information))
     pools.append(multiprocessing.Process(
-        target=hadoop_util.get_cluster_scheduler))
-    pools.append(multiprocessing.Process(
         target=hadoop_util.get_applications_information, args=(query_parameters,)))
     pools.append(multiprocessing.Process(
         target=hadoop_util.get_commonjobs_information)
     )
-
     for pool in pools:
         pool.daemon = True
         pool.start()
         pool.join()
-    # call lichongmin's predict function
-    # ...
 
     t = threading.Timer(
         FLAGS.time_period, thread_main, args=(query_parameters,))

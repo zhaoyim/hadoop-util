@@ -231,14 +231,14 @@ def thread_main():
     """
 
     cluster_df = pd.read_csv(CLUSTER_INFILE)
-    total_mem = cluster_df["totalMB"].values[0]
-    total_cpu = cluster_df["totalVirtualCores"].values[0]
+    # total_mem = cluster_df["totalMB"].values[0]
+    # total_cpu = cluster_df["totalVirtualCores"].values[0]
 
     scheduler_df = pd.read_csv(SCHEDULER_INFILE)
     scheduler_df = scheduler_df.dropna(how="any", axis=0)
 
-    scheduler_df["memory"] = scheduler_df["memory"] / total_mem
-    scheduler_df["vCores"] = scheduler_df["vCores"] / total_cpu
+    # scheduler_df["memory"] = scheduler_df["memory"] / total_mem
+    # scheduler_df["vCores"] = scheduler_df["vCores"] / total_cpu
 
     queue_names = set(scheduler_df["queueName"].values)
     scheduler_df = scheduler_df.set_index("queueName")
