@@ -6,10 +6,10 @@
 
 ## hadoop集群的信息采集：
 ### 修改conf文件夹下的properties.conf文件：
-    - hadoop_url: hadoop集群信息获取的restful url
-	- application_url: hadoop集群中applications信息获取的restful url
-	- job_url: mapreduce的job信息获取的restful url
-	- job_metrices: 根据所列内容对获取到的spark job的信息内容进行提取相应的字段
+    * hadoop_url: hadoop集群信息获取的restful url
+    * application_url: hadoop集群中applications信息获取的restful url
+    * job_url: mapreduce的job信息获取的restful url
+    * job_metrices: 根据所列内容对获取到的spark job的信息内容进行提取相应的字段
 ### 运行hadoop.py脚本：
 获取帮助请运行 python hadoop.py --help, 下面给出一些重要解释：<br/>
 * --file_path ：采集到的信息输出目录：其中cluster信息保存在$file_path/cluster.csv<br/>
