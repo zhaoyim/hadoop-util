@@ -37,6 +37,7 @@ from config_util import ConfigUtil
 import numpy as np
 from file_operator import FileOperator
 import pandas as pd
+from project_dir import project_dir
 
 
 class _LSTMModel(ts_model.SequentialTimeSeriesModel):
@@ -164,7 +165,7 @@ class _LSTMModel(ts_model.SequentialTimeSeriesModel):
             "Exogenous inputs are not implemented for this example.")
 
 
-def train(queue_name, csv_file_name, pre_file_name, model_dir):
+def train(queue_name, csv_file, pre_file, model_dir, train_step, predict_step):
     """
     :param queue_name: the queue_name of the hadoop
     :param csv_file_name: the input file to trainning model
@@ -173,8 +174,8 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     """
     tf.logging.set_verbosity(tf.logging.INFO)
 
-    csv_file_name = path.join(csv_file_name)
-    pre_file_name = path.join(pre_file_name)
+    csv_file_name = path.join(csv_file)
+    pre_file_name = path.join(pre_file)
     reader = tf.contrib.timeseries.CSVReader(
         csv_file_name,
         column_names=((tf.contrib.timeseries.TrainEvalFeatures.TIMES,)
@@ -187,10 +188,9 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
         model=_LSTMModel(num_features=2, num_units=256),
         optimizer=tf.train.AdamOptimizer(0.001), model_dir=model_dir)
 
-    estimator.train(input_fn=train_input_fn, steps=FLAGS.train_step)
+    estimator.train(input_fn=train_input_fn, steps=train_step)
     evaluation_input_fn = tf.contrib.timeseries.WholeDatasetInputFn(reader)
-    evaluation = estimator.evaluate(input_fn=evaluation_input_fn, steps=1,
-                                    )
+    evaluation = estimator.evaluate(input_fn=evaluation_input_fn, steps=1,)
 
     # Predict starting after the evaluation
     # (predictions,) = tuple(estimator.predict(
@@ -199,7 +199,7 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
 
     (predictions,) = tuple(estimator.predict(
         input_fn=tf.contrib.timeseries.predict_continuation_input_fn(
-            evaluation, steps=FLAGS.predict_step)))
+            evaluation, steps=predict_step)))
 
     observed_times = evaluation["times"][0]
     observed = evaluation["observed"][0, :, :]
@@ -207,13 +207,11 @@ def train(queue_name, csv_file_name, pre_file_name, model_dir):
     evaluated = evaluation["mean"][0]
     predicted_times = predictions['times']
 
-
     predicted = predictions["mean"]
     df = pd.DataFrame(predicted)
     df.insert(0, "times", predicted_times)
     df.insert(3, "queue", queue_name)
     df.to_csv(pre_file_name, header=None, mode="a", index=False)
-
 
     plt.figure(figsize=(15, 2))
     plt.axvline(99, linestyle="dotted", linewidth=4, color='r')
@@ -260,7 +258,9 @@ def thread_main():
             header=False)
         model_dir = "./model/{0}".format(queue_name)
 
-        train(queue_name, model_input_file, PRE_FILE, model_dir)
+        train(queue_name, model_input_file,
+              PRE_FILE, model_dir,
+              FLAGS.train_step, FLAGS.predict_step)
 
 
 def main(_):
@@ -276,11 +276,11 @@ def main(_):
     # call lichongmin's predict and core function
     # .....
 
-SCHEDULER_INFILE = path.join("./output/scheduler.csv")
+SCHEDULER_INFILE = path.join(project_dir, "output/scheduler.csv")
 
-CLUSTER_INFILE = path.join("./output/cluster2.csv")
+CLUSTER_INFILE = path.join(project_dir, "output/cluster2.csv")
 
-PRE_FILE = path.join("./model_out/prediction.csv")
+PRE_FILE = path.join(project_dir, "model_out/prediction.csv")
 
 FLAGS = None
 
