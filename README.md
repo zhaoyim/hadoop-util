@@ -23,5 +23,5 @@
   python train_lstm.py --help 获取更多帮助。
 * --time_period: 模型迭代训练周期。
 * --train_step: 训练step
-* -- predict_step: 预测step
+* -- predict_step: 预测step <br/>
 模拟训练请运行python test/lstm_test.py
